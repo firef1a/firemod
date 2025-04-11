@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.option.KeyBinding;
@@ -40,6 +41,10 @@ public class Mod implements ClientModInitializer {
 			Features.implement(feature -> {feature.clientStop(client);});
 			Mod.clientStopping();
 		});
+
+		ServerPlayConnectionEvents.INIT.register((networkHandler, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectInit(networkHandler, minecraftServer);});});
+		ServerPlayConnectionEvents.JOIN.register((event, sender, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectJoin(event, sender, minecraftServer);});});
+		ServerPlayConnectionEvents.DISCONNECT.register((networkHandler, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectDisconnect(networkHandler, minecraftServer);});});
 
 		LOGGER.info("making it 50x easier to macro since when i wrote this garbage");
 	}

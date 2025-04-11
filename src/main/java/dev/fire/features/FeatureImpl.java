@@ -1,6 +1,8 @@
 package dev.fire.features;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
@@ -11,6 +13,8 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -18,7 +22,8 @@ import javax.security.auth.callback.Callback;
 import java.util.List;
 
 public interface FeatureImpl {
-    String getName();
+    String getFeatureID();
+    String getFeatureName();
     boolean isEnabled();
     void setIsEnabled(boolean enabled);
 
@@ -33,4 +38,8 @@ public interface FeatureImpl {
     Text modifyChatMessage(Text base, Text modified);
     void clientStart(MinecraftClient minecraftClient);
     void clientStop(MinecraftClient minecraftClient);
+
+    void serverConnectInit(ServerPlayNetworkHandler networkHandler, MinecraftServer minecraftServer);
+    void serverConnectJoin(ServerPlayNetworkHandler networkHandler, PacketSender sender, MinecraftServer minecraftServer);
+    void serverConnectDisconnect(ServerPlayNetworkHandler networkHandler, MinecraftServer minecraftServer);
 }
