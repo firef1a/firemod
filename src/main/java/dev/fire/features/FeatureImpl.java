@@ -22,11 +22,11 @@ import javax.security.auth.callback.Callback;
 import java.util.List;
 
 public interface FeatureImpl {
-    String getFeatureID();
-    String getFeatureName();
     boolean isEnabled();
     void setIsEnabled(boolean enabled);
 
+    String getFeatureID();
+    String getFeatureName();
     void tick();
     void tooltip(ItemStack item, Item.TooltipContext context, TooltipType type, List<Text> textList);
     void renderWorld(WorldRenderContext worldRenderContext);
@@ -36,6 +36,7 @@ public interface FeatureImpl {
     void sentPacket(Packet<?> packet, CallbackInfo ci);
 
     Text modifyChatMessage(Text base, Text modified);
+    void onChatMessage(Text message, CallbackInfo ci);
     void clientStart(MinecraftClient minecraftClient);
     void clientStop(MinecraftClient minecraftClient);
 

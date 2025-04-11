@@ -24,8 +24,13 @@ public abstract class Feature implements FeatureImpl {
     private String featureName;
     private boolean isEnabled = true;
 
-    public String getFeatureID() { return featureID; }
-    public String getFeatureName() { return featureName; }
+    protected void init(String featureID, String featureName) {
+        this.featureID = featureID;
+        this.featureName = featureName;
+    }
+
+    public String getFeatureID() { return this.featureID; }
+    public String getFeatureName() { return this.featureName; }
     public boolean isEnabled() { return isEnabled; }
     public void setIsEnabled(boolean enabled) { isEnabled = enabled; }
     public void tick() { }
@@ -35,6 +40,7 @@ public abstract class Feature implements FeatureImpl {
     public void handlePacket(Packet<?> packet, CallbackInfo ci) { }
     public void sentPacket(Packet<?> packet, CallbackInfo ci) { }
     public Text modifyChatMessage(Text base, Text modified) { return modified; }
+    public void onChatMessage(Text message, CallbackInfo ci) { }
     public void clientStart(MinecraftClient minecraftClient) { }
     public void clientStop(MinecraftClient minecraftClient) { }
 

@@ -20,12 +20,12 @@ public class ItemTagViewer extends Feature {
     private int keyColor, valueColor, flagCmdColor, flagCmdColorValue;
 
     public ItemTagViewer() {
+        init("itemtagviewer", "Item Tag Viewer");
         this.keyColor = 0xdbb0f5;
         this.valueColor = 0xb3ddff;
         this.flagCmdColor = 0x959eed;
         this.flagCmdColorValue = 0xb2b8ed;
     }
-    public String getFeatureName() {return "ItemTagViewer"; }
 
     private static NbtCompound encodeStack(ItemStack stack, DynamicOps<NbtElement> ops) {
         DataResult<NbtElement> result = ComponentChanges.CODEC.encodeStart(ops, stack.getComponentChanges());
