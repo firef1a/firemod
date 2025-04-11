@@ -4,13 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "hud.MChatHud",
-    "hud.MInGameHud",
     "network.MClientConnection"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "client": [
-    "hud.MChatHud"
-  ]
+  }
 }
