@@ -25,6 +25,10 @@ repositories {
 		name 'Xander Maven'
 		url 'https://maven.isxander.dev/releases'
 	}
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+	}
 }
 
 dependencies {
@@ -38,6 +42,7 @@ dependencies {
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 	implementation 'org.python:jython-slim:2.7.2'
+	modApi "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
 }
 
 processResources {
