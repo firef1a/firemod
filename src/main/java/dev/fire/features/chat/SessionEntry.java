@@ -11,6 +11,12 @@ public class SessionEntry {
         this.reason = "N?A";
     }
 
+    public SessionEntry(String name, String reason, long timestamp) {
+        this.name = name;
+        this.timestamp = timestamp;
+        this.reason = reason;
+    }
+
     public void setReason(String reason) { this.reason = reason; }
     public String toString() {
         return "name: " + name + ", reason: " + reason + ", timestamp:" + timestamp;

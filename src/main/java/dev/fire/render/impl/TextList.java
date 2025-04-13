@@ -1,7 +1,6 @@
 package dev.fire.render.impl;
 
 import dev.fire.Mod;
-import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
 import net.minecraft.client.gui.DrawContext;
@@ -12,8 +11,8 @@ import java.util.ArrayList;
 public class TextList extends RenderObject {
     private ArrayList<Text> textList;
 
-    public TextList(Scaler position, double zIndex, Alignment alignment, boolean enabled) {
-        super(position, new Scaler(0,0), zIndex, alignment, enabled);
+    public TextList(Scaler position, double zIndex, Alignment alignment, Alignment parentAlignment, boolean enabled) {
+        super(position, new Scaler(0,0), zIndex, alignment, parentAlignment, enabled);
         textList = new ArrayList<>();
     }
 

@@ -1,6 +1,5 @@
 package dev.fire.render;
 
-import com.google.gson.JsonObject;
 import dev.fire.Mod;
 
 public class Scaler {
@@ -18,6 +17,7 @@ public class Scaler {
     }
 
     public Scaler add(Scaler scaler) { return new Scaler(sx + scaler.sx, sy + scaler.sy);}
+    public Scaler add(double x, double y) { return new Scaler(sx + x, sy + y);}
 
     public Point2i getScreenPosition() {
         return new Point2i((int) (sx * Mod.getWindowWidth()), (int) (sy * Mod.getWindowHeight()));
@@ -31,6 +31,10 @@ public class Scaler {
 
     public static Scaler fromPosition(double x, double y) {
         return new Scaler(x / Mod.getWindowWidth(), y / Mod.getWindowHeight());
+    }
+
+    public static Scaler fromPosition(Point2i point) {
+        return fromPosition(point.x, point.y);
     }
 
     /*

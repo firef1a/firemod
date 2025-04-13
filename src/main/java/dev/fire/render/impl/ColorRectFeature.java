@@ -7,8 +7,8 @@ import dev.fire.render.Scaler;
 
 public class ColorRectFeature extends ColorRect {
     public Feature feature;
-    public ColorRectFeature(Scaler position, Scaler size, ARGB color, double zIndex, Alignment alignment, Feature feature) {
-        super(position, size, color, zIndex, alignment, feature.isEnabled());
+    public ColorRectFeature(Scaler position, Scaler size, ARGB color, double zIndex, Alignment alignment, Alignment parentAlignment, Feature feature) {
+        super(position, size, color, zIndex, alignment, parentAlignment, feature.isEnabled());
     }
 
     @Override

@@ -15,27 +15,29 @@ public class RenderObject implements RenderableObject{
     public RenderObject parent = null;
 
     protected boolean enabled = true;
+    protected Alignment parentAlignment;
     protected Alignment alignment;
 
 
     public RenderObject() {
-        this(new Scaler(0,0), new Scaler(0,0), 0, Alignment.NONE, true);
+        this(new Scaler(0,0), new Scaler(0,0), 0, Alignment.NONE, Alignment.NONE, true);
     }
 
-    public RenderObject(Scaler position, Scaler size, double zIndex, Alignment alignment, boolean enabled) {
-        this(position, size, alignment, zIndex);
+    public RenderObject(Scaler position, Scaler size, double zIndex, Alignment alignment, Alignment parentAlignment, boolean enabled) {
+        this(position, size, alignment, parentAlignment, zIndex);
         this.enabled = enabled;
     }
 
-    public RenderObject(Scaler position, Scaler size, Alignment alignment, double zIndex) {
+    public RenderObject(Scaler position, Scaler size, Alignment alignment, Alignment parentAlignment, double zIndex) {
         this.position = position;
         this.size = size;
         this.zIndex = zIndex;
         this.alignment = alignment;
+        this.parentAlignment = parentAlignment;
         this.siblings = new ArrayList<>();
     }
 
-    public void update() { };
+    public void update() { }
 
     public void internalRender(DrawContext context) { }
 
@@ -52,37 +54,55 @@ public class RenderObject implements RenderableObject{
     }
 
     public void render(DrawContext context) {
-        internalRender(context);
+        if (enabled) internalRender(context);
         for (RenderObject object : siblings) {
             object.render(context);
         }
     }
 
-    public Point2i getScreenPosition() {
-        if (parent == null) { return position.getScreenPosition(); }
-        else {
-            Point2i pos = parent.position.add(position).getScreenPosition();
+    public Scaler getPosition() {
+        if (parent == null) {
+            return position;
+        } else {
+            Scaler pos = parent.getPosition().add(position);
+            if (parentAlignment.equals(Alignment.RIGHT)) {
+                pos = pos.add(parent.getScalerSize().sx, 0);
+            }
+            if (parentAlignment.equals(Alignment.LEFT)) {
+                pos = pos.add(-parent.getScalerSize().sx, 0);
+            }
+            if (parentAlignment.equals(Alignment.TOP)) {
+                pos = pos.add(0, parent.getScalerSize().sy);
+            }
+            if (parentAlignment.equals(Alignment.BOTTOM)) {
+                pos = pos.add(0, -parent.getScalerSize().sy);
+            }
+
             if (alignment.equals(Alignment.RIGHT)) {
-                return pos.add(parent.getWidth(), 0);
+                pos = pos.add(-this.getScalerSize().sx, 0);
             }
             if (alignment.equals(Alignment.LEFT)) {
-                return pos.add(-parent.getWidth(), 0);
+                pos = pos.add(this.getScalerSize().sx, 0);
             }
             if (alignment.equals(Alignment.TOP)) {
-                return pos.add(0, parent.getHeight());
+                pos = pos.add(0, -this.getScalerSize().sy);
             }
             if (alignment.equals(Alignment.BOTTOM)) {
-                return pos.add(0, -parent.getHeight());
+                pos = pos.add(0, this.getScalerSize().sy);
             }
             return pos;
         }
     }
 
+    public Point2i getScreenPosition() {
+        return getPosition().getScreenPosition();
+    }
+
     public int getX1() { return getScreenPosition().x; }
     public int getY1() { return getScreenPosition().y; }
 
-    public int getX2() { return getX1() + getWidth(); }
-    public int getY2() { return getY1() + getHeight(); }
+    public int getX2() { return (int) (getX1() + getWidth()); }
+    public int getY2() { return (int) (getY1() + getHeight()); }
 
     public Scaler getScalerSize() { return size; }
     public Point2i getSize() { return getScalerSize().getScreenPosition(); }
@@ -93,5 +113,9 @@ public class RenderObject implements RenderableObject{
     public void setEnabled(boolean e) { enabled = e; }
     public boolean isEnabled() { return enabled; }
     public Alignment getAlignment() { return alignment; }
+
+    public boolean containsPoint(Point2i point) {
+        return point.x >= getX1() && point.x <= getX2() && point.y >= getY1() && point.y <= getY2();
+    }
 
 }

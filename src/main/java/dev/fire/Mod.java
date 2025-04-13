@@ -2,10 +2,9 @@ package dev.fire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-//import dev.fire.features.Features;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import dev.fire.event.KeyInputHandler;
 import dev.fire.features.FeatureImpl;
 import dev.fire.features.Features;
 import dev.fire.helper.CommandQueueHelper;
@@ -20,49 +19,56 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class Mod implements ClientModInitializer {
-	public static final String MOD_NAME = "firemod";
+	public static final String MOD_NAME = "Fire Mod";
 	public static final String MOD_ID = "firemod";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final MinecraftClient MC = MinecraftClient.getInstance();
 	public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	public static final TextRenderer textRenderer = Mod.MC.textRenderer;
-	private static KeyBinding keyBinding;
+
+	public static String PLAYER_NAME, PLAYER_UUID, MOD_VERSION;
 
 	@Override
 	public void onInitializeClient() {
 		Features.init();
+		KeyInputHandler.register();
 
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			Features.implement(FeatureImpl::tick);
 			CommandQueueHelper.tick();
 		});
 		ItemTooltipCallback.EVENT.register(((itemStack, tooltipContext, tooltipType, list) -> Features.implement(feature -> feature.tooltip(itemStack, tooltipContext, tooltipType, list))));
-		HudRenderCallback.EVENT.register((draw, tickCounter) -> {Features.implement(feature -> feature.renderHUD(draw, tickCounter));});
-		WorldRenderEvents.LAST.register(event -> {Features.implement(feature -> {feature.renderWorld(event);});});
-		ClientLifecycleEvents.CLIENT_STARTED.register(client -> { Features.implement(feature -> {feature.clientStart(client);});});
+		HudRenderCallback.EVENT.register((draw, tickCounter) -> Features.implement(feature -> feature.renderHUD(draw, tickCounter)));
+		WorldRenderEvents.LAST.register(event -> Features.implement(feature -> feature.renderWorld(event)));
+		ClientLifecycleEvents.CLIENT_STARTED.register(client -> Features.implement(feature -> feature.clientStart(client)));
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-			Features.implement(feature -> {feature.clientStop(client);});
+			Features.implement(feature -> feature.clientStop(client));
 			Mod.clientStopping();
 		});
 
-		ServerPlayConnectionEvents.INIT.register((networkHandler, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectInit(networkHandler, minecraftServer);});});
-		ServerPlayConnectionEvents.JOIN.register((event, sender, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectJoin(event, sender, minecraftServer);});});
-		ServerPlayConnectionEvents.DISCONNECT.register((networkHandler, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectDisconnect(networkHandler, minecraftServer);});});
+		ServerPlayConnectionEvents.INIT.register((networkHandler, minecraftServer) -> Features.implement(feature -> feature.serverConnectInit(networkHandler, minecraftServer)));
+		ServerPlayConnectionEvents.JOIN.register((event, sender, minecraftServer) -> Features.implement(feature -> feature.serverConnectJoin(event, sender, minecraftServer)));
+		ServerPlayConnectionEvents.DISCONNECT.register((networkHandler, minecraftServer) -> Features.implement(feature -> feature.serverConnectDisconnect(networkHandler, minecraftServer)));
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			dispatcher.register(ClientCommandManager.literal("queue").executes(Mod::sendQueueCommand));
 			dispatcher.register(ClientCommandManager.literal("stats").then(ClientCommandManager.argument("player", StringArgumentType.string()).executes(Mod::sendStatsCommand)));
 		});
+
+		System.setProperty("java.awt.headless", "false");
+
+		PLAYER_UUID = MC.getSession().getUuidOrNull().toString();
+		PLAYER_NAME = MC.getSession().getUsername();
+
+		MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).isPresent() ? FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString() : null;
+
 
 		LOGGER.info("making it 50x easier to macro since when i wrote this garbage");
 	}
@@ -78,7 +84,9 @@ public class Mod implements ClientModInitializer {
 		return 1;
 	}
 
-	public static Screen getScreen() { return Mod.getScreen(); };
+	public static Screen getCurrentScreen() { return Mod.MC.currentScreen; }
+
+    public static void setCurrentScreen(Screen screen) { Mod.MC.setScreen(screen); }
 	public static int getWindowWidth() {
 		return Mod.MC.getWindow().getScaledWidth();
 	}

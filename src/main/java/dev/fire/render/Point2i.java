@@ -21,4 +21,8 @@ public class Point2i {
     public Point2i add(Point2i p) {
         return new Point2i(x+p.x, y+p.y);
     }
+
+    public Point2i multiply(Point2d p) {
+        return new Point2i((int) (x*p.x), (int) (y*p.y));
+    }
 }

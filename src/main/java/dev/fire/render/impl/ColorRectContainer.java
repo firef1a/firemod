@@ -1,15 +1,14 @@
 package dev.fire.render.impl;
 
-import dev.fire.features.Feature;
 import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Point2i;
 import dev.fire.render.Scaler;
 
-public class ColorRectFeatureContainer extends ColorRectFeature{
-    private int margin;
-    public ColorRectFeatureContainer(Scaler position, int margin, ARGB color, double zIndex, Alignment alignment, Alignment parentAlignment, Feature feature) {
-        super(position, new Scaler(0,0), color, zIndex, alignment, parentAlignment, feature);
+public class ColorRectContainer extends ColorRect {
+    private final int margin;
+    public ColorRectContainer(Scaler position, int margin, ARGB color, double zIndex, Alignment alignment, Alignment parentAlignment, boolean enabled) {
+        super(position, new Scaler(0,0), color, zIndex, alignment, parentAlignment, enabled);
         this.margin = margin;
     }
 

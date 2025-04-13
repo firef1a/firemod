@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ItemTagViewer extends Feature {
-    private int keyColor, valueColor, flagCmdColor, flagCmdColorValue;
+    private static int keyColor, valueColor, flagCmdColor, flagCmdColorValue;
 
     public ItemTagViewer() {
         init("itemtagviewer", "Item Tag Viewer");
@@ -49,7 +49,7 @@ public class ItemTagViewer extends Feature {
         if (bukkitValues != null) {
             Set<String> keys = bukkitValues.getKeys();
             if (!keys.isEmpty()) {
-                textList.add(Text.empty());
+                ArrayList<Text> appendText = new ArrayList<>();
                 for (String key : keys) {
                     if (key.equals("hypercube:codetemplatedata") || key.equals("hypercube:varitem")) continue;
                     hasTags = true;
@@ -62,9 +62,13 @@ public class ItemTagViewer extends Feature {
                             valueColor = 0xeb4b4b;
                         }
                         Text addText = Text.literal(key.substring(10) + ": ").withColor(keyColor).append(Text.literal(value).withColor(valueColor));
-                        textList.add(addText);
+                        appendText.add(addText);
                     }
                 }
+                if (hasTags) {
+                    appendText.addFirst(Text.empty());
+                }
+                textList.addAll(appendText);
             }
         }
         ArrayList<String> tags = new ArrayList<>(List.of(
@@ -72,13 +76,16 @@ public class ItemTagViewer extends Feature {
                 "max_stack_size",
                 "enchantment_glint_override"
         ));
-        List<Text> extTags = new ArrayList<>();
+        ArrayList<Text> extTags = new ArrayList<>();
         for (String tag : tags) {
             NbtElement element = nbt.get("minecraft:" + tag);
             if (element != null) { extTags.add(Text.literal(tag + ": ").withColor(flagCmdColor).append(Text.literal(element.toString()).withColor(flagCmdColorValue))); }
         }
-        if (!hasTags && !extTags.isEmpty()) { extTags.add(Text.empty()); }
-        textList.addAll(extTags);
+        if (!hasTags && !extTags.isEmpty()) {
+            extTags.addFirst(Text.empty());
+            textList.addAll(extTags);
+        }
+
         return textList;
     }
 }
