@@ -3,10 +3,17 @@ package dev.fire;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 //import dev.fire.features.Features;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import dev.fire.features.FeatureImpl;
 import dev.fire.features.Features;
 import dev.fire.helper.CommandQueueHelper;
+import dev.fire.utils.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -17,6 +24,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +59,23 @@ public class Mod implements ClientModInitializer {
 		ServerPlayConnectionEvents.JOIN.register((event, sender, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectJoin(event, sender, minecraftServer);});});
 		ServerPlayConnectionEvents.DISCONNECT.register((networkHandler, minecraftServer) -> { Features.implement(feature -> {feature.serverConnectDisconnect(networkHandler, minecraftServer);});});
 
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+			dispatcher.register(ClientCommandManager.literal("queue").executes(Mod::sendQueueCommand));
+			dispatcher.register(ClientCommandManager.literal("stats").then(ClientCommandManager.argument("player", StringArgumentType.string()).executes(Mod::sendStatsCommand)));
+		});
+
 		LOGGER.info("making it 50x easier to macro since when i wrote this garbage");
+	}
+
+	private static int sendQueueCommand(CommandContext<FabricClientCommandSource> context) {
+		ChatUtils.sendMessage("/support queue");
+		return 1;
+	}
+
+	private static int sendStatsCommand(CommandContext<FabricClientCommandSource> context) {
+		String player_name = StringArgumentType.getString(context, "player");
+		ChatUtils.sendMessage("/support stats " + player_name);
+		return 1;
 	}
 
 	public static Screen getScreen() { return Mod.getScreen(); };
