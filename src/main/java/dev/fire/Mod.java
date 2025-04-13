@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 //import dev.fire.features.Features;
 import dev.fire.features.FeatureImpl;
 import dev.fire.features.Features;
+import dev.fire.helper.CommandQueueHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,10 @@ public class Mod implements ClientModInitializer {
 	public void onInitializeClient() {
 		Features.init();
 
-		ClientTickEvents.START_CLIENT_TICK.register(client -> { Features.implement(FeatureImpl::tick); });
+		ClientTickEvents.START_CLIENT_TICK.register(client -> {
+			Features.implement(FeatureImpl::tick);
+			CommandQueueHelper.tick();
+		});
 		ItemTooltipCallback.EVENT.register(((itemStack, tooltipContext, tooltipType, list) -> Features.implement(feature -> feature.tooltip(itemStack, tooltipContext, tooltipType, list))));
 		HudRenderCallback.EVENT.register((draw, tickCounter) -> {Features.implement(feature -> feature.renderHUD(draw, tickCounter));});
 		WorldRenderEvents.LAST.register(event -> {Features.implement(feature -> {feature.renderWorld(event);});});
@@ -48,6 +53,15 @@ public class Mod implements ClientModInitializer {
 
 		LOGGER.info("making it 50x easier to macro since when i wrote this garbage");
 	}
+
+	public static Screen getScreen() { return Mod.getScreen(); };
+	public static int getWindowWidth() {
+		return Mod.MC.getWindow().getScaledWidth();
+	}
+	public static int getWindowHeight() {
+		return Mod.MC.getWindow().getScaledHeight();
+	}
+
 	public static void clientStopping() {
 		log("stopping");
 	}

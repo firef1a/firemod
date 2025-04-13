@@ -35,18 +35,24 @@ public class ItemTagViewer extends Feature {
 
     @Override
     public void tooltip(ItemStack item, Item.TooltipContext context, TooltipType type, List<Text> textList) {
-        if (context.getRegistryLookup() == null) return;
+        textList = getTagTooltip(item, context, textList);
+    }
+
+    public List<Text> getTagTooltip(ItemStack item, Item.TooltipContext context, List<Text> textList) {
+        if (context.getRegistryLookup() == null) return textList;
         NbtCompound nbt = encodeStack(item, context.getRegistryLookup().getOps(NbtOps.INSTANCE));
         //Mod.log(nbt.toString());
 
         NbtCompound mcData = nbt.getCompound("minecraft:custom_data");
         NbtCompound bukkitValues = mcData.getCompound("PublicBukkitValues");
+        boolean hasTags = false;
         if (bukkitValues != null) {
             Set<String> keys = bukkitValues.getKeys();
             if (!keys.isEmpty()) {
                 textList.add(Text.empty());
                 for (String key : keys) {
-                    if (key.equals("hypercube:codetemplatedata")) continue;
+                    if (key.equals("hypercube:codetemplatedata") || key.equals("hypercube:varitem")) continue;
+                    hasTags = true;
                     int keyColor = this.keyColor;//0xb785d6;
                     int valueColor = this.valueColor;//0x96d0ff;//0x6fd6f2;
                     NbtElement element = bukkitValues.get(key);
@@ -66,9 +72,13 @@ public class ItemTagViewer extends Feature {
                 "max_stack_size",
                 "enchantment_glint_override"
         ));
+        List<Text> extTags = new ArrayList<>();
         for (String tag : tags) {
             NbtElement element = nbt.get("minecraft:" + tag);
-            if (element != null) { textList.add(Text.literal(tag + ": ").withColor(flagCmdColor).append(Text.literal(element.toString()).withColor(flagCmdColorValue))); }
+            if (element != null) { extTags.add(Text.literal(tag + ": ").withColor(flagCmdColor).append(Text.literal(element.toString()).withColor(flagCmdColorValue))); }
         }
+        if (!hasTags && !extTags.isEmpty()) { extTags.add(Text.empty()); }
+        textList.addAll(extTags);
+        return textList;
     }
 }

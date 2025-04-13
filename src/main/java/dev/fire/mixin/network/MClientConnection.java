@@ -1,7 +1,6 @@
 package dev.fire.mixin.network;
 
 import dev.fire.features.Features;
-import dev.fire.features.ext.PacketHandler;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
@@ -11,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 @Mixin(ClientConnection.class)
 public class MClientConnection {

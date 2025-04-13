@@ -3,6 +3,8 @@ package dev.fire.mixin.hud;
 import dev.fire.Mod;
 import dev.fire.features.Feature;
 import dev.fire.features.Features;
+import dev.fire.helper.CommandQueue;
+import dev.fire.helper.CommandQueueHelper;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
 import org.python.antlr.ast.Call;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MChatHud {
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
     public void addMessage(Text message, CallbackInfo ci) {
+        if (message.getString().equals("◆ Welcome back to DiamondFire! ◆")) { CommandQueueHelper.addCurrentTimestamp(750L); }
         Features.implement(feature -> { feature.onChatMessage(message, ci); });
     }
 

@@ -1,9 +1,11 @@
 package dev.fire.features;
 
-import dev.fire.features.chat.SupportAccept;
+import dev.fire.features.chat.SupportFeatures;
+import dev.fire.features.item.ItemLoreViewer;
 import dev.fire.features.item.ItemTagViewer;
-import dev.fire.features.plot.CPUDisplay;
-import dev.fire.features.serverjoin.QueueOnJoin;
+import dev.fire.features.commands.QueueOnJoin;
+import dev.fire.render.Scaler;
+import dev.fire.render.impl.RenderObject;
 import net.minecraft.text.Text;
 
 import java.util.HashMap;
@@ -14,10 +16,12 @@ public class Features {
     public static Map<String, FeatureImpl> featureMap = new HashMap<>();
 
     public static void init() {
+        add(new FeatureHudObjects());
         add(new ItemTagViewer());
         //add(new CPUDisplay());
-        //add(new SupportAccept());
+        add(new SupportFeatures());
         add(new QueueOnJoin());
+        add(new ItemLoreViewer());
     }
 
     private static void add(Feature feature) { featureMap.put(feature.getFeatureID(), feature); }
