@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 
 public class TextList extends RenderObject {
-    private ArrayList<Text> textList;
+    protected ArrayList<Text> textList;
 
     public TextList(Scaler position, double zIndex, Alignment alignment, Alignment parentAlignment, boolean enabled) {
         super(position, new Scaler(0,0), zIndex, alignment, parentAlignment, enabled);

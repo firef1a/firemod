@@ -2,7 +2,11 @@ package dev.fire.features.item;
 
 import dev.fire.Mod;
 import dev.fire.features.Feature;
+import dev.fire.features.FeatureHudObjects;
+import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
+import dev.fire.render.impl.TextList;
+import dev.fire.render.impl.TooltipObject;
 import dev.fire.utils.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.DrawContext;
@@ -21,22 +25,32 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ItemLoreViewer extends Feature {
+    private Scaler position = new Scaler(0.0390625, 0.041666666666666664);
+    private static TooltipObject itemLoreViewerTooltip;
+
     public ItemLoreViewer() {
         init("itemloreviewer", "Item Lore Viewer");
+        itemLoreViewerTooltip = new TooltipObject(position, 0, Alignment.NONE, Alignment.NONE, true);
+        FeatureHudObjects.registerObject(itemLoreViewerTooltip);
     }
-    private Scaler position = new Scaler(0.0390625, 0.041666666666666664);
+
 
     @Override
     public void renderHUD(DrawContext context, RenderTickCounter tickCounter) {
-        if (Mod.MC.player == null) return;
+        if (Mod.MC.player == null) {
+            itemLoreViewerTooltip.setEnabled(false);
+            return;
+        };
         PlayerInventory inventory = Mod.MC.player.getInventory();
         ItemStack main = inventory.getMainHandStack();
 
-        if (main.isEmpty()) return;
-        if (Mod.MC.textRenderer == null) return;
+        if (main.isEmpty() || Mod.MC.textRenderer == null) {
+            itemLoreViewerTooltip.setEnabled(false);
+            return;
+        };
 
         List<Text> tooltip = Screen.getTooltipFromItem(Mod.MC.gameRenderer.getClient(), main);
-        List<Text> modTooltip = new ArrayList<>();
+        ArrayList<Text> modTooltip = new ArrayList<>();
 
         for (int i = 0; i < tooltip.size(); i++) {
             if (i < 20) {
@@ -46,6 +60,10 @@ public class ItemLoreViewer extends Feature {
                 break;
             }
         }
-        context.drawTooltip(Mod.MC.textRenderer, modTooltip, position.getScreenX(), position.getScreenY());
+
+        itemLoreViewerTooltip.setTextList(modTooltip);
+        //context.drawTooltip(Mod.MC.textRenderer, modTooltip, position.getScreenX(), position.getScreenY());
+        itemLoreViewerTooltip.setEnabled(true);
     }
+
 }
