@@ -129,7 +129,7 @@ public class SupportFeatures extends Feature {
         Set<String> keys = supportQuestions.keySet();
         for (String key : keys) {
             SupportQuestion question = supportQuestions.get(key);
-            if (currentTime - question.timestamp > 30L * 60L * 1000L) {
+            if (currentTime - question.timestamp > 60L * 60L * 1000L) {
                 ChatUtils.displayMessage(Text.literal(question.name + "'s question was removed because it timed out.").withColor(lighterQuestion));
                 supportQuestions.remove(key);
             }
@@ -225,7 +225,7 @@ public class SupportFeatures extends Feature {
             supportQuestions.put(matcher.group(1), new SupportQuestion(matcher.group(1), matcher.group(2), matcher.group(3), System.currentTimeMillis()));
         }
 
-        matcher = Pattern.compile("^ {39}\\\\n» (.{3,16}) has answered (.{3,16})' question:\\\\n\\\\n.*\\\\n {39}", Pattern.CASE_INSENSITIVE).matcher(text);
+        matcher = Pattern.compile("^ {39}\\n» (.{3,16}) has answered (.{3,16})'s question:\\n\\n.*\\n {39}", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) { supportQuestions.remove(matcher.group(2)); }
     }
 }

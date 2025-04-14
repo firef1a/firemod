@@ -97,8 +97,6 @@ public class Mod implements ClientModInitializer {
 		log("stopping");
 	}
 
-	public static void log(String msg) {
-		Mod.LOGGER.info(msg);
-	}
+	public static void log(String msg) { Mod.LOGGER.info(msg); }
 
 }
