@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "hud.MChatHud",
-    "network.MClientConnection"
+    "network.MClientConnection",
+    "MToastManager"
   ],
   "injectors": {
     "defaultRequire": 1
