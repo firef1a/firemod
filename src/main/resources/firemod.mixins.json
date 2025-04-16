@@ -5,7 +5,7 @@
   "mixins": [
     "hud.MChatHud",
     "network.MClientConnection",
-    "MToastManager"
+    "hud.MToastManager"
   ],
   "injectors": {
     "defaultRequire": 1

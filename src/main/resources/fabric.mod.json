@@ -11,7 +11,7 @@
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "ARR",
 	"icon": "assets/firemod/icon.png",
 	"environment": "*",
 	"entrypoints": {
