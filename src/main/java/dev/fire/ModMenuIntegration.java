@@ -7,6 +7,6 @@ import dev.fire.config.Config;
 public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> Config.getConfig().getLibConfig().generateScreen(parent);
+        return parent -> Config.getLibConfig().generateScreen(parent);
     }
 }

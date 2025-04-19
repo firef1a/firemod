@@ -1,5 +1,6 @@
 package dev.fire.features;
 
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -43,4 +44,6 @@ public interface FeatureImpl {
     void serverConnectInit(ServerPlayNetworkHandler networkHandler, MinecraftServer minecraftServer);
     void serverConnectJoin(ServerPlayNetworkHandler networkHandler, PacketSender sender, MinecraftServer minecraftServer);
     void serverConnectDisconnect(ServerPlayNetworkHandler networkHandler, MinecraftServer minecraftServer);
+
+    void saveConfig(JsonObject jsonObject);
 }

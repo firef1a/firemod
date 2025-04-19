@@ -3,46 +3,42 @@ package dev.fire.config;
 import com.google.gson.*;
 import dev.fire.FileManager;
 import dev.fire.Mod;
+import dev.fire.features.Feature;
+import dev.fire.features.FeatureImpl;
+import dev.fire.features.Features;
+import dev.fire.features.plot.CPUDisplay;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.text.Text;
+import org.python.antlr.ast.Str;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 public class Config {
-    private static Config instance;
-    public boolean TestVar = DefaultConfig.TestVar;
+    public static JsonObject configJSON = new JsonObject();
+    public static HashMap<String, Object> config;
 
-    public static Config getConfig() {
-        if (instance == null) {
-            try {
-                instance = new Config();
+    public static void loadConfig() {
+        try {
+            config = new HashMap<>();
+            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            configJSON = new JsonParser().parse(FileManager.readConfig(FileManager.getConfigFile())).getAsJsonObject();
 
-                //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                JsonObject object = new JsonParser().parse(FileManager.readConfig(FileManager.getConfigFile())).getAsJsonObject();
-
-                instance.TestVar = object.get("TestVar").getAsBoolean();
-
-            } catch (Exception exception) {
-                Mod.LOGGER.info("Config didn't load: " + exception);
-                Mod.LOGGER.info("Making a new one.");
-                instance = new Config();
-                instance.save();
-            }
+        } catch (Exception exception) {
+            Mod.LOGGER.info("Config didn't load: " + exception);
         }
-        return instance;
     }
 
-    public static void clear() {
-        instance = null;
-    }
-
-    private void save() {
+    public static void save() {
         try {
             JsonObject object = new JsonObject();
 
-            object.addProperty("TestVar", Config.getConfig().TestVar);
+            for (Feature feature : Features.featureMap.values()) {
+                feature.saveConfig(object);
+                object.addProperty(feature.getFeatureID() + ".enabled", feature.isEnabled());
+            }
 
             FileManager.writeConfig(FileManager.getConfigFile(), object.toString());
         } catch (Exception e) {
@@ -50,43 +46,48 @@ public class Config {
         }
     }
 
-    public YetAnotherConfigLib getLibConfig() {
+    public static YetAnotherConfigLib getLibConfig() {
         YetAnotherConfigLib.Builder yacl =
                 YetAnotherConfigLib.createBuilder()
                         .title(Text.literal("Used for narration. Could be used to render a title in the future."))
                         .category(displayCategory().build());
 
-        return yacl.save(this::save).build();
+        return yacl.save(Config::save).build();
     }
 
 
-    private ConfigCategory.Builder displayCategory() {
+    private static ConfigCategory.Builder displayCategory() {
         ConfigCategory.Builder configBuilder = ConfigCategory.createBuilder()
                 .name(Text.literal("HUD Displays"))
-                .tooltip(Text.literal("Customize your Site-03 HUD!"));
+                .tooltip(Text.literal("Customize your HUD!"));
+
+
+        for (String key : Features.featureMap.keySet()) {
+            OptionGroup.Builder hudList = OptionGroup.createBuilder();
+            Feature feature = Features.featureMap.get(key);
+            hudList
+                    .name(Text.literal(feature.getFeatureName()))
+                    .description(OptionDescription.of(Text.literal(feature.getDescription())))
+                    .option(Option.createBuilder(boolean.class)
+                            .name(Text.literal(feature.getFeatureName() + " Enabled"))
+                            .description(OptionDescription.createBuilder()
+                                    .text(Text.literal("Enable " + feature.getFeatureName()))
+                                    .build())
+                            .binding(
+                                    feature.isEnabled,
+                                    () -> feature.isEnabled,
+                                    opt -> feature.isEnabled = opt
+                            )
+                            .controller(TickBoxControllerBuilder::create)
+                            .build());
+
+            OptionGroup returnList = hudList.build();
+            configBuilder.group(returnList);
+        }
+
+
 
         // define group builders
-
-        // player list obj group
-        OptionGroup playerList = OptionGroup.createBuilder()
-                .name(Text.literal("test"))
-                .description(OptionDescription.of(Text.literal("moment of inertia")))
-                .option(Option.createBuilder(boolean.class)
-                        .name(Text.literal("placeholder bool"))
-                        .description(OptionDescription.createBuilder()
-                                .text(Text.literal("realism"))
-                                .build())
-                        .binding(
-                                DefaultConfig.TestVar,
-                                () -> TestVar,
-                                opt -> TestVar = opt
-                        )
-                        .controller(TickBoxControllerBuilder::create)
-                        .build())
-                .build();
-
-
-        configBuilder.group(playerList);
 
 
         // return built category

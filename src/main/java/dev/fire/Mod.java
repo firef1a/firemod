@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import dev.fire.config.Config;
 import dev.fire.event.KeyInputHandler;
 import dev.fire.features.FeatureImpl;
 import dev.fire.features.Features;
@@ -37,6 +38,7 @@ public class Mod implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		Config.loadConfig();
 		Features.init();
 		KeyInputHandler.register();
 

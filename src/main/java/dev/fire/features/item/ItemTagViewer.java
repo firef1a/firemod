@@ -20,7 +20,7 @@ public class ItemTagViewer extends Feature {
     private static int keyColor, valueColor, flagCmdColor, flagCmdColorValue;
 
     public ItemTagViewer() {
-        init("itemtagviewer", "Item Tag Viewer");
+        init("itemtagviewer", "Item Tag Viewer", "Shows hypercube item tags in item lore, when combined with Item Lore Viewer, long item lores may be shortened.");
         this.keyColor = 0xdbb0f5;
         this.valueColor = 0xb3ddff;
         this.flagCmdColor = 0x959eed;

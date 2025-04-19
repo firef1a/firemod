@@ -1,6 +1,8 @@
 package dev.fire.features.item;
 
+import com.google.gson.JsonObject;
 import dev.fire.Mod;
+import dev.fire.config.Config;
 import dev.fire.features.Feature;
 import dev.fire.features.FeatureHudObjects;
 import dev.fire.render.Alignment;
@@ -25,15 +27,21 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ItemLoreViewer extends Feature {
-    private Scaler position = new Scaler(0.0390625, 0.041666666666666664);
     private static TooltipObject itemLoreViewerTooltip;
 
     public ItemLoreViewer() {
-        init("itemloreviewer", "Item Lore Viewer");
-        itemLoreViewerTooltip = new TooltipObject(position, 0, Alignment.NONE, Alignment.NONE, true);
+        init("itemloreviewer", "Item Lore Viewer", "Lets you view tooltips of items on your hud.");
+
+        Scaler hudPosition = Scaler.fromJsonOrDefault(getFeatureID() + ".loreviewer", Config.configJSON, new Scaler(0.0390625, 0.041666666666666664));
+
+        itemLoreViewerTooltip = new TooltipObject(hudPosition, 0, Alignment.NONE, Alignment.NONE, true);
         FeatureHudObjects.registerObject(itemLoreViewerTooltip);
     }
 
+    @Override
+    public void saveConfig(JsonObject jsonObject) {
+        itemLoreViewerTooltip.position.saveConfig(getFeatureID() + ".loreviewer", jsonObject);
+    }
 
     @Override
     public void renderHUD(DrawContext context, RenderTickCounter tickCounter) {
@@ -48,6 +56,7 @@ public class ItemLoreViewer extends Feature {
             itemLoreViewerTooltip.setEnabled(false);
             return;
         };
+        itemLoreViewerTooltip.setEnabled(isEnabled());
 
         List<Text> tooltip = Screen.getTooltipFromItem(Mod.MC.gameRenderer.getClient(), main);
         ArrayList<Text> modTooltip = new ArrayList<>();

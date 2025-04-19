@@ -6,6 +6,6 @@ import net.minecraft.text.Text;
 
 public class CPUDisplay extends Feature {
     public CPUDisplay() {
-        init("cpudisplay", "CPU Display");
+        init("cpudisplay", "CPU Display", "Displays cpu");
     }
 }

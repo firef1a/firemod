@@ -1,12 +1,15 @@
 package dev.fire.features.chat;
 
+import com.google.gson.JsonObject;
 import dev.fire.Mod;
+import dev.fire.config.Config;
 import dev.fire.features.Feature;
 import dev.fire.features.FeatureHudObjects;
 import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
 import dev.fire.render.impl.*;
+import dev.fire.screens.HudFeatureMoveScreen;
 import dev.fire.utils.ChatUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
@@ -19,7 +22,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SupportFeatures extends Feature {
+public class SessionQuestionHud extends Feature {
     public static ArrayList<SessionEntry> sessionQueue = new ArrayList<>();
     public static Map<String, SupportQuestion> supportQuestions = new HashMap<>();
 
@@ -28,17 +31,24 @@ public class SupportFeatures extends Feature {
     private static ColorRectContainer supportFeatureHudObject;
     private static TextList supportQueueHudObject;
 
-    public SupportFeatures() {
-        init("supportaccept", "Support Accept");
+    public SessionQuestionHud() {
+        init("supporthud", "Session & Questions HUD", "Shows session in queue and tracks support questions on your hud.");
         sessionQueue = new ArrayList<>();
         supportQuestions = new HashMap<>();
 
-        supportFeatureHudObject = new ColorRectContainer(new Scaler(0.9939236111111112, 0.019444444444444445), 3, new ARGB(0.5, 0x000000), 0, Alignment.RIGHT, Alignment.NONE, true);
+        Scaler hudPosition = Scaler.fromJsonOrDefault(getFeatureID() + ".supportFeatureHudObject", Config.configJSON, (new Scaler(0.9939236111111112, 0.019444444444444445)));
+
+        supportFeatureHudObject = new ColorRectContainer(hudPosition, 3, new ARGB(0.5, 0x000000), 0, Alignment.RIGHT, Alignment.NONE, true);
         supportQueueHudObject = new TextList(new Scaler(0, 0), 0, Alignment.NONE, Alignment.NONE, true);
         updateSupportQueueHudText();
 
         supportFeatureHudObject.addSibling(supportQueueHudObject);
         FeatureHudObjects.registerObject(supportFeatureHudObject);
+    }
+
+    @Override
+    public void saveConfig(JsonObject jsonObject) {
+        supportFeatureHudObject.position.saveConfig(getFeatureID() + ".supportFeatureHudObject", jsonObject);
     }
 
     @Override
@@ -48,15 +58,78 @@ public class SupportFeatures extends Feature {
     }
 
     private void updateSupportQueueHudText() {
-        supportFeatureHudObject.setEnabled(!sessionQueue.isEmpty() || !supportQuestions.isEmpty());
+        boolean hudOpen = HudFeatureMoveScreen.isOpen();
+        supportFeatureHudObject.setEnabled(hudOpen || !sessionQueue.isEmpty() || !supportQuestions.isEmpty());
         if (Mod.MC.textRenderer == null) return;
         int supportColor = 0x8f8fff;
         int lighterSupportColor = 0xaaaaff;
         int maxWidth = new Scaler(0.3472222222222222, 0.0).getScreenX();
+        long currentTime = System.currentTimeMillis();
         String widthString = " ".repeat(maxWidth / Mod.MC.textRenderer.getWidth(" "));
         ArrayList<Text> textList = new ArrayList<>();
 
-        long currentTime = System.currentTimeMillis();
+        int questionColor = 0x7fff7f;
+        int lighterQuestion = 0xaaffaa;
+        int lighter2Question = 0xd4ffd4;
+
+        Set<String> keys = supportQuestions.keySet();
+        for (String key : keys) {
+            SupportQuestion question = supportQuestions.get(key);
+            if (currentTime - question.timestamp > 60L * 60L * 1000L) {
+                ChatUtils.displayMessage(Text.literal(question.name + "'s question was removed because it timed out.").withColor(lighterQuestion));
+                supportQuestions.remove(key);
+            }
+        }
+
+        if (hudOpen) {
+            textList.add(Text.literal("Support Queue: ").withColor(supportColor).append(Text.literal("__").withColor(lighterSupportColor)));
+            Text textEntry = Text.empty()
+                    .append(Text.literal( "#" + 1 + " ").withColor(Colors.LIGHT_GRAY))
+                    .append(Text.literal("Sputt").withColor(0xffd47f))
+                    .append(Text.literal(" (1:20:42)").withColor(Colors.LIGHT_GRAY));
+            textList.add(textEntry);
+            Text reasonText = Text.empty()
+                    .append(Text.literal(" ▶ ").withColor(lighterSupportColor))
+                    .append(Text.literal("Reason: need help with code not working help pls!!!").withColor(Colors.WHITE));
+            List<OrderedText> addText = Mod.MC.textRenderer.wrapLines(reasonText, maxWidth);
+            int i = 0;
+            for (OrderedText text : addText) {
+                Text add = convertOrderedTextToTextWithStyle(text);
+                if (i > 0) add = Text.literal("   ").append(add);
+                textList.add(add);
+                i++;
+            }
+
+            textList.add(Text.literal(widthString));
+
+            String waiting = "1 question..";
+            textList.add(Text.literal("Support Questions: ").withColor(questionColor).append(Text.literal(waiting).withColor(lighterQuestion)));
+
+            Text questionTitle = Text.empty()
+                    .append(Text.literal("Jeremaster").withColor(lighterQuestion))
+                    .append(Text.literal(" [Owner]").withColor(Colors.LIGHT_GRAY))
+                    .append(Text.literal(" (00:00:00)").withColor(Colors.LIGHT_GRAY));
+            textList.add(questionTitle);
+
+            textEntry = Text.empty()
+                    .append(Text.literal(" - ").withColor(Colors.LIGHT_GRAY))
+                    .append(Text.literal("i ned help starting the loader ;-;").withColor(lighter2Question));
+
+            addText = Mod.MC.textRenderer.wrapLines(textEntry, maxWidth);
+            i = 0;
+            for (OrderedText text : addText) {
+                Text add = convertOrderedTextToTextWithStyle(text);
+                if (i > 0) add = Text.literal("   ").append(add);
+                textList.add(add);
+                i++;
+            }
+
+            supportQueueHudObject.setTextList(textList);
+
+            return;
+        }
+
+
 
         if (!sessionQueue.isEmpty()) {
             String waiting = sessionQueue.size() +  " waiting...";
@@ -87,10 +160,6 @@ public class SupportFeatures extends Feature {
                 index++;
             }
         }
-
-        int questionColor = 0x7fff7f;
-        int lighterQuestion = 0xaaffaa;
-        int lighter2Question = 0xd4ffd4;
 
 
         if (!supportQuestions.isEmpty()) {
@@ -125,15 +194,6 @@ public class SupportFeatures extends Feature {
             }
         }
         supportQueueHudObject.setTextList(textList);
-
-        Set<String> keys = supportQuestions.keySet();
-        for (String key : keys) {
-            SupportQuestion question = supportQuestions.get(key);
-            if (currentTime - question.timestamp > 60L * 60L * 1000L) {
-                ChatUtils.displayMessage(Text.literal(question.name + "'s question was removed because it timed out.").withColor(lighterQuestion));
-                supportQuestions.remove(key);
-            }
-        }
     }
 
     public static Text convertOrderedTextToTextWithStyle(OrderedText orderedText) {
@@ -182,7 +242,7 @@ public class SupportFeatures extends Feature {
         String text = base.getString();
         Matcher matcher = Pattern.compile("^\\[SUPPORT] (.*) joined the support queue\\. ▶ Reason: (.*)", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) {
-            return Text.empty().append(modified).append(Text.literal(" ≔ [ACCEPT]").withColor(0xffdc7a))
+            return Text.empty().append(modified).append(Text.literal(" [ACCEPT]").withColor(0xffdc7a))
                     .styled((style -> style
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/support accept " + matcher.group(1)))
                             .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("/support accept " + matcher.group(1)).withColor(0xffdc7a)))
@@ -217,6 +277,8 @@ public class SupportFeatures extends Feature {
 
         matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) entered a session with (.{3,16})\\..*", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) { removeSupportQueue(matcher.group(2)); }
+
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) terminated a session with (.{3,16}). ▶ .*", Pattern.CASE_INSENSITIVE).matcher(text);
 
 
         // questions unfinished

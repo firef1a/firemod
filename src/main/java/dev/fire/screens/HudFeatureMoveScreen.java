@@ -1,6 +1,7 @@
 package dev.fire.screens;
 
 import dev.fire.Mod;
+import dev.fire.config.Config;
 import dev.fire.features.FeatureHudObjects;
 import dev.fire.render.Alignment;
 import dev.fire.render.Point2d;
@@ -60,6 +61,7 @@ public class HudFeatureMoveScreen extends Screen {
 
         if (selectedObject != null) {
             selectedObject.position.setScaler(Scaler.fromPosition(mouse.add(-selectedObjectOffset.x, -selectedObjectOffset.y)));
+            Config.save();
         }
 
         this.selectedObject = null;

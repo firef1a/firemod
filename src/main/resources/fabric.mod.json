@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"client": [
 			"dev.fire.Mod"
+		],
+		"modmenu": [
+			"dev.fire.ModMenuIntegration"
 		]
 	},
 	"mixins": [

@@ -1,5 +1,6 @@
 package dev.fire.render;
 
+import com.google.gson.JsonObject;
 import dev.fire.Mod;
 
 public class Scaler {
@@ -35,6 +36,17 @@ public class Scaler {
 
     public static Scaler fromPosition(Point2i point) {
         return fromPosition(point.x, point.y);
+    }
+
+    public void saveConfig(String namespace, JsonObject jsonObject) {
+        jsonObject.addProperty(namespace + ".sx", sx);
+        jsonObject.addProperty(namespace + ".sy", sy);
+    }
+
+    public static Scaler fromJsonOrDefault(String namespace, JsonObject jsonObject, Scaler def) {
+        return jsonObject.has(namespace + ".sx") && jsonObject.has(namespace + ".sy") ?
+                new Scaler(jsonObject.get(namespace + ".sx").getAsDouble(), jsonObject.get(namespace + ".sy").getAsDouble()) :
+                def;
     }
 
     /*

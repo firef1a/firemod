@@ -1,6 +1,8 @@
 package dev.fire.features;
 
+import com.google.gson.JsonObject;
 import dev.fire.Mod;
+import dev.fire.config.Config;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -22,15 +24,19 @@ import java.util.List;
 public abstract class Feature implements FeatureImpl {
     private String featureID;
     private String featureName;
-    private boolean isEnabled = true;
+    private String description;
+    public boolean isEnabled;
 
-    protected void init(String featureID, String featureName) {
+    protected void init(String featureID, String featureName, String description) {
         this.featureID = featureID;
         this.featureName = featureName;
+        this.description = description;
+        isEnabled = !Config.configJSON.has(featureID + ".enabled") || Config.configJSON.has(featureID + ".enabled");
     }
 
     public String getFeatureID() { return this.featureID; }
     public String getFeatureName() { return this.featureName; }
+    public String getDescription() { return this.description; }
     public boolean isEnabled() { return isEnabled; }
     public void setIsEnabled(boolean enabled) { isEnabled = enabled; }
     public void tick() { }
@@ -47,4 +53,8 @@ public abstract class Feature implements FeatureImpl {
     public void serverConnectInit(ServerPlayNetworkHandler networkHandler, MinecraftServer minecraftServer) { };
     public void serverConnectJoin(ServerPlayNetworkHandler networkHandler, PacketSender sender, MinecraftServer minecraftServer) { };
     public void serverConnectDisconnect(ServerPlayNetworkHandler networkHandler, MinecraftServer minecraftServer) { };
+
+    public void saveConfig(JsonObject jsonObject) {
+
+    }
 }
