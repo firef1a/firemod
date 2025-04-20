@@ -26,6 +26,8 @@ import net.minecraft.client.gui.screen.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
+
 
 public class Mod implements ClientModInitializer {
 	public static final String MOD_NAME = "Fire Mod";
@@ -34,7 +36,7 @@ public class Mod implements ClientModInitializer {
 	public static final MinecraftClient MC = MinecraftClient.getInstance();
 	public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	public static String PLAYER_NAME, PLAYER_UUID, MOD_VERSION;
+	public static String MOD_VERSION;
 
 	@Override
 	public void onInitializeClient() {
@@ -66,13 +68,13 @@ public class Mod implements ClientModInitializer {
 
 		System.setProperty("java.awt.headless", "false");
 
-		PLAYER_UUID = MC.getSession().getUuidOrNull().toString();
-		PLAYER_NAME = MC.getSession().getUsername();
-
 		MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).isPresent() ? FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString() : null;
 
 		LOGGER.info("making it 50x easier to macro since when i wrote this garbage");
 	}
+
+	public static String getPlayerName() { return Mod.MC.getSession().getUsername(); }
+	public static UUID getPlayerUUID() { return Mod.MC.getSession().getUuidOrNull(); }
 
 	private static int sendQueueCommand(CommandContext<FabricClientCommandSource> context) {
 		ChatUtils.sendMessage("/support queue");

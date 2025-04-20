@@ -2,8 +2,10 @@ package dev.fire.event;
 
 import dev.fire.Mod;
 import dev.fire.screens.HudFeatureMoveScreen;
+import dev.fire.screens.PTPScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -11,16 +13,28 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
     public static final String KEY_CATEGORY = Mod.MOD_NAME;
-    public static KeyBinding openMenuKeybinding;
+    public static KeyBinding openMenuKeybinding, openPTPKeybinding;
+    private static long lastPressed = 0L;
 
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (openMenuKeybinding.wasPressed()) {
-                if (!(Mod.getCurrentScreen() instanceof HudFeatureMoveScreen)) {
-                    HudFeatureMoveScreen screen = new HudFeatureMoveScreen(Text.literal("HUD Config Screen"), Mod.getCurrentScreen());
-                    Mod.setCurrentScreen(screen);
+            Screen cScreen = Mod.getCurrentScreen();
+            long timestamp = System.currentTimeMillis();
+            long diff = timestamp - lastPressed;
+            if (openMenuKeybinding.isPressed()) {
+                if (!(cScreen instanceof HudFeatureMoveScreen)) {
+                    Mod.setCurrentScreen(new HudFeatureMoveScreen(Text.literal("HUD Config Screen"), cScreen));
                 }
             }
+
+            if (openPTPKeybinding.wasPressed()) {
+                lastPressed = timestamp;
+                if (!(cScreen instanceof PTPScreen)) {
+                    Mod.setCurrentScreen(new PTPScreen(Text.literal("PTP Screen"), cScreen));
+                }
+            }
+            if (diff > 350L && cScreen instanceof PTPScreen ptpScreen) Mod.setCurrentScreen(ptpScreen.parentScreen);
+
         });
     }
 
@@ -32,15 +46,14 @@ public class KeyInputHandler {
                 GLFW.GLFW_KEY_Y, // The keycode of the key
                 KEY_CATEGORY // The translation key of the keybinding's category.
         ));
-        /*
-        acceptLatestSupport = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Accept Latest Support", // The translation key of the keybinding's name
+
+        openPTPKeybinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "Open PTP Menu", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_GRAVE_ACCENT, // The keycode of the key
+                GLFW.GLFW_KEY_G, // The keycode of the key
                 KEY_CATEGORY // The translation key of the keybinding's category.
         ));
 
-         */
         registerKeyInputs();
 
     }

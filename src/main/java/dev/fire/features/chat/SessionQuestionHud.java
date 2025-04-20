@@ -31,6 +31,9 @@ public class SessionQuestionHud extends Feature {
     private static ColorRectContainer supportFeatureHudObject;
     private static TextList supportQueueHudObject;
 
+    private static boolean isInSupportSession = false;
+    private static SessionEntry currentSupportSession;
+
     public SessionQuestionHud() {
         init("supporthud", "Session & Questions HUD", "Shows session in queue and tracks support questions on your hud.");
         sessionQueue = new ArrayList<>();
@@ -59,7 +62,7 @@ public class SessionQuestionHud extends Feature {
 
     private void updateSupportQueueHudText() {
         boolean hudOpen = HudFeatureMoveScreen.isOpen();
-        supportFeatureHudObject.setEnabled(hudOpen || !sessionQueue.isEmpty() || !supportQuestions.isEmpty());
+        supportFeatureHudObject.setEnabled(hudOpen || !sessionQueue.isEmpty() || !supportQuestions.isEmpty() || isInSupportSession);
         if (Mod.MC.textRenderer == null) return;
         int supportColor = 0x8f8fff;
         int lighterSupportColor = 0xaaaaff;
@@ -125,13 +128,33 @@ public class SessionQuestionHud extends Feature {
             }
 
             supportQueueHudObject.setTextList(textList);
-
             return;
+        }
+
+        if (isInSupportSession) {
+            textList.add(Text.literal("In Support Session:").withColor(supportColor));
+            Text textEntry = Text.empty()
+                    .append(Text.literal(currentSupportSession.name).withColor(0xffd47f))
+                    .append(Text.literal(" (" + convertTimestampToHMS(currentTime - currentSupportSession.timestamp) + ")").withColor(Colors.LIGHT_GRAY));
+            textList.add(textEntry);
+            Text reasonText = Text.empty()
+                    .append(Text.literal(" ▶ ").withColor(lighterSupportColor))
+                    .append(Text.literal("Reason: " + currentSupportSession.reason).withColor(Colors.WHITE));
+            List<OrderedText> addText = Mod.MC.textRenderer.wrapLines(reasonText, maxWidth);
+            int i = 0;
+            for (OrderedText text : addText) {
+                Text add = convertOrderedTextToTextWithStyle(text);
+                if (i > 0) add = Text.literal("   ").append(add);
+                textList.add(add);
+                i++;
+            }
+
+            supportQueueHudObject.setTextList(textList);
         }
 
 
 
-        if (!sessionQueue.isEmpty()) {
+        if (!sessionQueue.isEmpty() && !isInSupportSession) {
             String waiting = sessionQueue.size() +  " waiting...";
             textList.add(Text.literal("Support Queue: ").withColor(supportColor).append(Text.literal(waiting).withColor(lighterSupportColor)));
             int index = 1;
@@ -163,7 +186,7 @@ public class SessionQuestionHud extends Feature {
 
 
         if (!supportQuestions.isEmpty()) {
-            if (!sessionQueue.isEmpty()) { textList.add(Text.literal(widthString)); }
+            if (!sessionQueue.isEmpty() || isInSupportSession) { textList.add(Text.empty()); }
 
             String waiting = supportQuestions.size() +  " question" + (supportQuestions.size() == 1 ? "" : "s") +"...";
             textList.add(Text.literal("Support Questions: ").withColor(questionColor).append(Text.literal(waiting).withColor(lighterQuestion)));
@@ -230,6 +253,16 @@ public class SessionQuestionHud extends Feature {
         }
     }
 
+    public SessionEntry getSupportQueue(String name) {
+        ArrayList<SessionEntry> queue = sessionQueue;
+        for (SessionEntry entry : queue) {
+            if (entry.name.equals(name)) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
     public static String convertTimestampToHMS(long timestamp) {
         Date date = new Date(timestamp);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -251,9 +284,15 @@ public class SessionQuestionHud extends Feature {
         return modified;
     }
 
+    public static void resetCurrentSupport() {
+        isInSupportSession = false;
+        currentSupportSession = null;
+    }
+
     @Override
     public void onChatMessage(Text message, CallbackInfo ci) {
         String text = message.getString();
+        String playerName = Mod.getPlayerName();
         Matcher matcher;
 
         // queue command response
@@ -276,10 +315,22 @@ public class SessionQuestionHud extends Feature {
         if (matcher.find()) { removeSupportQueue(matcher.group(1)); }
 
         matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) entered a session with (.{3,16})\\..*", Pattern.CASE_INSENSITIVE).matcher(text);
-        if (matcher.find()) { removeSupportQueue(matcher.group(2)); }
+        if (matcher.find()) {
+            String supporteeName = matcher.group(2);
+            Mod.log(matcher.group(1) + " " + playerName);
+            if (matcher.group(1).equals(playerName)) {
+                isInSupportSession = true;
+                currentSupportSession = new SessionEntry(supporteeName, getSupportQueue(supporteeName).reason, System.currentTimeMillis());
+            }
 
-        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) terminated a session with (.{3,16}). ▶ .*", Pattern.CASE_INSENSITIVE).matcher(text);
+            removeSupportQueue(supporteeName);
+        }
 
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) terminated a session with (.{3,16})\\. ▶ .*", Pattern.CASE_INSENSITIVE).matcher(text);
+        if (matcher.find() && matcher.group(1).equals(playerName)) {resetCurrentSupport();}
+
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) finished a session with (.{3,16})\\. ▶ .*", Pattern.CASE_INSENSITIVE).matcher(text);
+        if (matcher.find() && matcher.group(1).equals(playerName)) {resetCurrentSupport();}
 
         // questions unfinished
         matcher = Pattern.compile("^» Support Question: \\(Click to answer\\)\\nAsked by (.{3,16}) (.{3,16})\\n(.*)", Pattern.CASE_INSENSITIVE).matcher(text);

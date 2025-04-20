@@ -31,7 +31,7 @@ public abstract class Feature implements FeatureImpl {
         this.featureID = featureID;
         this.featureName = featureName;
         this.description = description;
-        isEnabled = !Config.configJSON.has(featureID + ".enabled") || Config.configJSON.has(featureID + ".enabled");
+        isEnabled = !Config.configJSON.has(featureID + ".enabled") || Config.configJSON.get(featureID + ".enabled").getAsBoolean();
     }
 
     public String getFeatureID() { return this.featureID; }

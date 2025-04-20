@@ -11,6 +11,7 @@ import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
 import dev.fire.render.impl.ColorRectContainer;
+import dev.fire.render.impl.ColorRectFeatureContainer;
 import dev.fire.render.impl.TextList;
 import dev.fire.utils.ChatUtils;
 import net.minecraft.client.gui.DrawContext;
@@ -27,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ModVanishTracker extends Feature {
-    private static ColorRectContainer hudContainer;
+    private static ColorRectFeatureContainer hudContainer;
     private static TextList hudTextList;
 
     private static String currentNode = "";
@@ -43,7 +44,7 @@ public class ModVanishTracker extends Feature {
 
         Scaler hudPosition = Scaler.fromJsonOrDefault(getFeatureID() + ".modtracker", Config.configJSON, new Scaler(0.4739583333333333, 0.0125));
 
-        hudContainer = new ColorRectContainer(hudPosition, 3, new ARGB(0.5, 0x00000),0,Alignment.NONE, Alignment.NONE, false);
+        hudContainer = new ColorRectFeatureContainer(hudPosition, 3, new ARGB(0.5, 0x00000),0,Alignment.NONE, Alignment.NONE, this);
         hudTextList = new TextList(new Scaler(0,0), 0, Alignment.NONE, Alignment.NONE, true);
         hudContainer.addSibling(hudTextList);
 
@@ -56,7 +57,7 @@ public class ModVanishTracker extends Feature {
     }
 
     public void tick() {
-        if (Mod.MC.getServer() != null) Mod.log("Current player count: " + Mod.MC.getServer().getCurrentPlayerCount());
+        //if (Mod.MC.getServer() != null) Mod.log("Current player count: " + Mod.MC.getServer().getCurrentPlayerCount());
         String command = "/server";
         if (!CommandQueueHelper.hasCommand(command)) {
             long currentTimestamp = System.currentTimeMillis();

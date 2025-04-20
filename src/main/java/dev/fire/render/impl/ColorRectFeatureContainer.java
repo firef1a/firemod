@@ -6,8 +6,9 @@ import dev.fire.render.Alignment;
 import dev.fire.render.Point2i;
 import dev.fire.render.Scaler;
 
-public class ColorRectFeatureContainer extends ColorRectFeature{
+public class ColorRectFeatureContainer extends ColorRectFeature {
     private int margin;
+
     public ColorRectFeatureContainer(Scaler position, int margin, ARGB color, double zIndex, Alignment alignment, Alignment parentAlignment, Feature feature) {
         super(position, new Scaler(0,0), color, zIndex, alignment, parentAlignment, feature);
         this.margin = margin;

@@ -90,9 +90,7 @@ public class HudFeatureMoveScreen extends Screen {
     }
     @Override
     public void close() {
-        // save config here !!!
-        assert client != null;
-        client.setScreen(parentScreen);
+        Mod.setCurrentScreen(parentScreen);
     }
 
     public static boolean isOpen() { return Mod.getCurrentScreen() instanceof HudFeatureMoveScreen; }

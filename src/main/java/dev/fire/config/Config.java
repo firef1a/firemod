@@ -41,6 +41,7 @@ public class Config {
             }
 
             FileManager.writeConfig(FileManager.getConfigFile(), object.toString());
+            Mod.LOGGER.info("Saved config: " + FileManager.getConfigFile().getName());
         } catch (Exception e) {
             Mod.LOGGER.info("Couldn't save config: " + e);
         }
@@ -65,8 +66,7 @@ public class Config {
         for (String key : Features.featureMap.keySet()) {
             OptionGroup.Builder hudList = OptionGroup.createBuilder();
             Feature feature = Features.featureMap.get(key);
-            hudList
-                    .name(Text.literal(feature.getFeatureName()))
+            hudList.name(Text.literal(feature.getFeatureName()))
                     .description(OptionDescription.of(Text.literal(feature.getDescription())))
                     .option(Option.createBuilder(boolean.class)
                             .name(Text.literal(feature.getFeatureName() + " Enabled"))
@@ -74,9 +74,9 @@ public class Config {
                                     .text(Text.literal("Enable " + feature.getFeatureName()))
                                     .build())
                             .binding(
-                                    feature.isEnabled,
-                                    () -> feature.isEnabled,
-                                    opt -> feature.isEnabled = opt
+                                    feature.isEnabled(),
+                                    feature::isEnabled,
+                                    feature::setIsEnabled
                             )
                             .controller(TickBoxControllerBuilder::create)
                             .build());

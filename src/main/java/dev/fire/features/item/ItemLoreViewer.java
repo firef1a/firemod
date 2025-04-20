@@ -5,8 +5,10 @@ import dev.fire.Mod;
 import dev.fire.config.Config;
 import dev.fire.features.Feature;
 import dev.fire.features.FeatureHudObjects;
+import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
+import dev.fire.render.impl.ColorRectFeatureContainer;
 import dev.fire.render.impl.TextList;
 import dev.fire.render.impl.TooltipObject;
 import dev.fire.utils.ColorUtils;
@@ -28,19 +30,22 @@ import java.util.List;
 
 public class ItemLoreViewer extends Feature {
     private static TooltipObject itemLoreViewerTooltip;
+    private static ColorRectFeatureContainer hudContainer;
 
     public ItemLoreViewer() {
         init("itemloreviewer", "Item Lore Viewer", "Lets you view tooltips of items on your hud.");
 
         Scaler hudPosition = Scaler.fromJsonOrDefault(getFeatureID() + ".loreviewer", Config.configJSON, new Scaler(0.0390625, 0.041666666666666664));
 
-        itemLoreViewerTooltip = new TooltipObject(hudPosition, 0, Alignment.NONE, Alignment.NONE, true);
-        FeatureHudObjects.registerObject(itemLoreViewerTooltip);
+        hudContainer = new ColorRectFeatureContainer(hudPosition, 0, new ARGB(0,0), 0, Alignment.NONE, Alignment.NONE, this);
+        itemLoreViewerTooltip = new TooltipObject(new Scaler(0,0), 0, Alignment.NONE, Alignment.NONE, true);
+        hudContainer.addSibling(itemLoreViewerTooltip);
+        FeatureHudObjects.registerObject(hudContainer);
     }
 
     @Override
     public void saveConfig(JsonObject jsonObject) {
-        itemLoreViewerTooltip.position.saveConfig(getFeatureID() + ".loreviewer", jsonObject);
+        hudContainer.position.saveConfig(getFeatureID() + ".loreviewer", jsonObject);
     }
 
     @Override

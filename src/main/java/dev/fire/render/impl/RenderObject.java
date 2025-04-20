@@ -54,7 +54,8 @@ public class RenderObject implements RenderableObject{
     }
 
     public void render(DrawContext context) {
-        if (isEnabled()) internalRender(context);
+        if (!isEnabled()) return;
+        internalRender(context);
         for (RenderObject object : siblings) {
             object.render(context);
         }

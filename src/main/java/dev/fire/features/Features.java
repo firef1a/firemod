@@ -1,5 +1,6 @@
 package dev.fire.features;
 
+import dev.fire.features.chat.ModVanishTracker;
 import dev.fire.features.chat.SessionQuestionHud;
 import dev.fire.features.commands.CommandHider;
 import dev.fire.features.item.ItemLoreViewer;
@@ -22,7 +23,7 @@ public class Features {
         add(new SessionQuestionHud());
         add(new QueueOnJoin());
         add(new ItemLoreViewer());
-        //add(new ModVanishTracker());
+        add(new ModVanishTracker());
         add(new CommandHider());
         add(new PaperDollFeature());
     }
