@@ -1,4 +1,4 @@
-package dev.fire.render.impl;
+package dev.fire.render.hudElements;
 
 import dev.fire.render.Alignment;
 import dev.fire.render.Point2i;

@@ -1,7 +1,6 @@
-package dev.fire.render.impl;
+package dev.fire.render.hudElements;
 
 import dev.fire.render.Point2i;
-import dev.fire.render.Scaler;
 import net.minecraft.client.gui.DrawContext;
 
 public interface RenderableObject {

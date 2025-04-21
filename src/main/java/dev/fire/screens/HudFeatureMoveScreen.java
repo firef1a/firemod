@@ -7,7 +7,7 @@ import dev.fire.render.Alignment;
 import dev.fire.render.Point2d;
 import dev.fire.render.Point2i;
 import dev.fire.render.Scaler;
-import dev.fire.render.impl.RenderObject;
+import dev.fire.render.hudElements.RenderObject;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -90,7 +90,9 @@ public class HudFeatureMoveScreen extends Screen {
     }
     @Override
     public void close() {
-        Mod.setCurrentScreen(parentScreen);
+        // save config here !!!
+        assert client != null;
+        client.setScreen(parentScreen);
     }
 
     public static boolean isOpen() { return Mod.getCurrentScreen() instanceof HudFeatureMoveScreen; }

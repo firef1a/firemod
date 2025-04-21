@@ -30,9 +30,8 @@ public class CommandQueueHelper {
         long currentTimestamp = System.currentTimeMillis();
         if (currentTimestamp > nextTimestamp && nextTimestamp != -1 && !commandQueue.isEmpty() && Mod.MC.getNetworkHandler() != null) {
             CommandQueue command = commandQueue.removeFirst();
-            for (String hider : command.returnHiderList) {
-                if (!CommandHider.commandHiderList.contains(hider)) CommandHider.addHiddenCommand(hider);
-            }
+            CommandHider.addSingleHiddenCommand(command.singleHider);
+            CommandHider.addMultiHiddenCommand(command.multiHider);
             ChatUtils.sendMessage(command.command);
             nextTimestamp = currentTimestamp + command.delay;
         }

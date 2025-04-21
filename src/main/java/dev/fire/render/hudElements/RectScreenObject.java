@@ -1,8 +1,6 @@
-package dev.fire.render.impl;
+package dev.fire.render.hudElements;
 
 import dev.fire.Mod;
-import dev.fire.render.ARGB;
-import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
 
 public class RectScreenObject extends RenderObject {

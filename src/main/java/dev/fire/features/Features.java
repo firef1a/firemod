@@ -7,6 +7,7 @@ import dev.fire.features.item.ItemLoreViewer;
 import dev.fire.features.item.ItemTagViewer;
 import dev.fire.features.commands.QueueOnJoin;
 import dev.fire.features.player.PaperDollFeature;
+import dev.fire.features.plot.PTPTracker;
 import net.minecraft.text.Text;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class Features {
         add(new ModVanishTracker());
         add(new CommandHider());
         add(new PaperDollFeature());
+        add(new PTPTracker());
     }
 
     private static void add(Feature feature) { featureMap.put(feature.getFeatureID(), feature); }

@@ -7,14 +7,8 @@ import dev.fire.features.FeatureHudObjects;
 import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
-import dev.fire.render.impl.ColorRectContainer;
-import dev.fire.render.impl.ColorRectFeatureContainer;
-import dev.fire.render.impl.RenderPaperDoll;
-import dev.fire.screens.HudFeatureMoveScreen;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-
-import java.util.ArrayList;
+import dev.fire.render.hudElements.ColorRectFeatureContainer;
+import dev.fire.render.hudElements.RenderPaperDoll;
 
 public class PaperDollFeature extends Feature {
     private static ColorRectFeatureContainer hudContainer;

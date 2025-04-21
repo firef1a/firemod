@@ -10,10 +10,8 @@ import dev.fire.helper.CommandQueueHelper;
 import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
-import dev.fire.render.impl.ColorRectContainer;
-import dev.fire.render.impl.ColorRectFeatureContainer;
-import dev.fire.render.impl.TextList;
-import dev.fire.utils.ChatUtils;
+import dev.fire.render.hudElements.ColorRectFeatureContainer;
+import dev.fire.render.hudElements.TextList;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.HoverEvent;
@@ -63,7 +61,7 @@ public class ModVanishTracker extends Feature {
             long currentTimestamp = System.currentTimeMillis();
             if (currentTimestamp - timestamp > 5000L) {
                 timestamp = currentTimestamp;
-                CommandQueueHelper.addCommand(new CommandQueue(command, 0, new ArrayList<>(List.of("^You are currently connected to (.*).", "^Available servers: "))));
+                CommandQueueHelper.addCommand(new CommandQueue(command, 0, new ArrayList<>(), new ArrayList<>(List.of("^You are currently connected to (.*).", "^Available servers: "))));
             }
         }
     }

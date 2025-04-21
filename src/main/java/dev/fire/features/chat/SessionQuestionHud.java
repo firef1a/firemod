@@ -8,7 +8,7 @@ import dev.fire.features.FeatureHudObjects;
 import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
-import dev.fire.render.impl.*;
+import dev.fire.render.hudElements.*;
 import dev.fire.screens.HudFeatureMoveScreen;
 import dev.fire.utils.ChatUtils;
 import net.minecraft.client.gui.DrawContext;
@@ -274,7 +274,7 @@ public class SessionQuestionHud extends Feature {
     public Text modifyChatMessage(Text base, Text modified) {
         String text = base.getString();
         Matcher matcher = Pattern.compile("^\\[SUPPORT] (.*) joined the support queue\\. ▶ Reason: (.*)", Pattern.CASE_INSENSITIVE).matcher(text);
-        if (matcher.find()) {
+        if (matcher.find() && false) {
             return Text.empty().append(modified).append(Text.literal(" [ACCEPT]").withColor(0xffdc7a))
                     .styled((style -> style
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/support accept " + matcher.group(1)))

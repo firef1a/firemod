@@ -8,24 +8,17 @@ import dev.fire.features.FeatureHudObjects;
 import dev.fire.render.ARGB;
 import dev.fire.render.Alignment;
 import dev.fire.render.Scaler;
-import dev.fire.render.impl.ColorRectFeatureContainer;
-import dev.fire.render.impl.TextList;
-import dev.fire.render.impl.TooltipObject;
-import dev.fire.utils.ColorUtils;
-import net.minecraft.block.Block;
+import dev.fire.render.hudElements.ColorRectFeatureContainer;
+import dev.fire.render.hudElements.TooltipObject;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.AirBlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
-import net.minecraft.util.collection.DefaultedList;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ItemLoreViewer extends Feature {

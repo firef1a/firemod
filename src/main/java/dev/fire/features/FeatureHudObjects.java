@@ -1,8 +1,8 @@
 package dev.fire.features;
 
 import dev.fire.Mod;
-import dev.fire.render.impl.RectScreenObject;
-import dev.fire.render.impl.RenderObject;
+import dev.fire.render.hudElements.RectScreenObject;
+import dev.fire.render.hudElements.RenderObject;
 import dev.fire.screens.HudFeatureMoveScreen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
