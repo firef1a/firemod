@@ -57,7 +57,7 @@ public class Rect {
         if (text != null) context.drawText(Mod.MC.textRenderer, text, getCenter().x-(Mod.MC.textRenderer.getWidth(text)/2), getCenter().y-(Mod.MC.textRenderer.fontHeight/2), 0xFFFFFF, true);
     }
 
-    public void onClick(Point2i mouse) { if(clickEffect != null) clickEffect.accept(mouse); }
+    public void onClick(Point2i mouse) { if (clickEffect != null) clickEffect.accept(mouse); }
 
     public Point2i getCenter() { return position.add(size.multiply(new Point2d(0.5, 0.5))); }
 
