@@ -30,8 +30,8 @@ import java.util.UUID;
 
 
 public class Mod implements ClientModInitializer {
-	public static final String MOD_NAME = "Fire Mod";
-	public static final String MOD_ID = "firemod";
+	public static final String MOD_NAME = "SupportUtils";
+	public static final String MOD_ID = "supportutils";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final MinecraftClient MC = MinecraftClient.getInstance();
 	public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();

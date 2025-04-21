@@ -1,18 +1,18 @@
 {
 	"schemaVersion": 1,
-	"id": "firemod",
+	"id": "supportutils",
 	"version": "${version}",
-	"name": "firemod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "SupportUtils",
+	"description": "Various features for mcdiamondfire.com staff.",
 	"authors": [
-		"Me!"
+		"firef1a"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/project/supportutils",
+		"sources": "https://github.com/firef1a/supportutils"
 	},
-	"license": "ARR",
-	"icon": "assets/firemod/icon.png",
+	"license": "GPL-3.0",
+	"icon": "assets/supportutils/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"client": [
@@ -23,7 +23,7 @@
 		]
 	},
 	"mixins": [
-      "firemod.mixins.json"
+      "supportutils.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.9",

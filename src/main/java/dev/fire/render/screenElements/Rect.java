@@ -9,14 +9,16 @@ import net.minecraft.text.Text;
 
 import java.awt.*;
 import java.awt.image.renderable.RenderContext;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class Rect {
+public class Rect implements RendRect {
     public Point2i position, size;
     public ARGB rectColor;
     public ARGB borderColor, borderHighlightColor;
     protected Text text;
     public Consumer<Point2i> clickEffect;
+    protected ArrayList<RendRect> siblings;
 
 
     public Rect() { }
