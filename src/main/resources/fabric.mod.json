@@ -3,7 +3,7 @@
 	"id": "supportutils",
 	"version": "${version}",
 	"name": "SupportUtils",
-	"description": "Various features for mcdiamondfire.com staff.",
+	"description": "Various qol and coding features for mcdiamondfire.com staff.",
 	"authors": [
 		"firef1a"
 	],
@@ -11,7 +11,7 @@
 		"homepage": "https://modrinth.com/project/supportutils",
 		"sources": "https://github.com/firef1a/supportutils"
 	},
-	"license": "GPL-3.0",
+	"license": "GPL-2.0",
 	"icon": "assets/supportutils/icon.png",
 	"environment": "client",
 	"entrypoints": {

@@ -36,6 +36,7 @@ public class CTPTracker extends Feature {
     public static void sendCTPSuggestion() {
         if (Mod.MC.getNetworkHandler() == null) return;
         ArrayList<RequestCommandCompletionsC2SPacket> requestCommandCompletionsC2SPackets = new ArrayList<>(List.of(
+                new RequestCommandCompletionsC2SPacket(5000000, "/ctp "),
                 new RequestCommandCompletionsC2SPacket(5000001, "/ctp event "),
                 new RequestCommandCompletionsC2SPacket(5000002, "/ctp function "),
                 new RequestCommandCompletionsC2SPacket(5000003, "/ctp process ")
@@ -48,7 +49,8 @@ public class CTPTracker extends Feature {
                         0,
                         new ArrayList<>(List.of(
                                 "^Usage: \\n/plot data entities\\n/plot data vars\\n/plot data tasks\\n/plot data players\\n/plot data plot",
-                                "^Error: You must be in a plot to use this command!"
+                                "^Error: You must be in a plot to use this command!",
+                                "^Error: You need to be a plot developer to use this command!"
                         ))
                 ));
     }
@@ -63,12 +65,18 @@ public class CTPTracker extends Feature {
 
         matcher = Pattern.compile("^Error: You must be in a plot to use this command!").matcher(text);
         if (matcher.find()) { ctpState = CTPState.NO_PERM; }
+
+        matcher = Pattern.compile("^Error: You need to be a plot developer to use this command!").matcher(text);
+        if (matcher.find()) { ctpState = CTPState.NO_PERM; }
     }
 
     @Override
     public void handlePacket(Packet<?> packet, CallbackInfo ci) {
         if (packet instanceof CommandSuggestionsS2CPacket(int id, int start, int length, List<CommandSuggestionsS2CPacket.Suggestion> suggestions)) {
-            Mod.log(id + " " + start + " " + length + " "  +suggestions);
+            //Mod.log(id + " " + start + " " + length + " "  +suggestions);
+            if (id == 5000000) {
+                ctpState = suggestions.isEmpty() ? CTPState.NO_PERM : CTPState.VALID;
+            }
             if (idMap.containsKey(id)) {
                 String eventId = idMap.get(id);
                 ArrayList<String> result = new ArrayList<>();
@@ -87,7 +95,7 @@ public class CTPTracker extends Feature {
                 }
                 ctpResult.put(eventId, result);
                 if (eventId.equals("event")) ctpResult.put("entity", entityResult);
-                Mod.log(ctpResult.toString());
+                //Mod.log(ctpResult.toString());
             }
         }
     }

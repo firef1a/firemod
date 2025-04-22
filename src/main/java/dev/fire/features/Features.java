@@ -25,9 +25,9 @@ public class Features {
         add(new SessionQuestionHud());
         add(new QueueOnJoin());
         add(new ItemLoreViewer());
-        add(new ModVanishTracker());
+        //add(new ModVanishTracker());
         add(new CommandHider());
-        add(new PaperDollFeature());
+        //add(new PaperDollFeature());
         add(new PTPTracker());
         add(new CTPTracker());
     }

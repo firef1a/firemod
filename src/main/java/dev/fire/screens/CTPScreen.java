@@ -58,12 +58,12 @@ public class CTPScreen extends Screen {
 
         record ColorTuple(ARGB borderColor, ARGB borderHighlightColor) {};
 
-        double oD = 0.65;
-        double hD = 0.9;
+        double oD = 0.60;
+        double hD = 1;
         HashMap<String, ColorTuple> colorTupleHashMap = new HashMap<>(Map.ofEntries(
                 entry("event", new ColorTuple(new ARGB(oD, 0x48d5e8), new ARGB(hD, 0x8fe6f2))),
-                entry("entity", new ColorTuple(new ARGB(oD, 0xebd142), new ARGB(hD, 0xedde8c))),
-                entry("process", new ColorTuple(new ARGB(oD, 0x72f056), new ARGB(hD, 0xa7f296))),
+                entry("entity", new ColorTuple(new ARGB(oD, 0xf0ed46), new ARGB(hD, 0xf2f085))),
+                entry("process", new ColorTuple(new ARGB(oD, 0x5bf056), new ARGB(hD, 0x98f595))),
                 entry("function", new ColorTuple(new ARGB(oD, 0x5670f0), new ARGB(hD, 0x90a1f5)))
         ));
 
@@ -92,7 +92,7 @@ public class CTPScreen extends Screen {
         /*
         Draw each code line
          */
-        numLines = 1;
+        numLines = 0;
         if (!displayPrototypes.isEmpty() && enabled) {
             int protoTypeIndex = 0;
             int eachIndex = 0;
@@ -108,7 +108,7 @@ public class CTPScreen extends Screen {
                     String funcText = text;
                     if (funcText.length() > 27) funcText = funcText.substring(0, 24) + "...";
 
-                    Rect drawRect = new Rect(position, size, new ARGB(0,0), colorTupleHashMap.get(prototype.eventId).borderColor, colorTupleHashMap.get(prototype.eventId).borderHighlightColor);
+                    Rect drawRect = new Rect(position, size, new ARGB(0.3,0x000000), colorTupleHashMap.get(prototype.eventId).borderColor, colorTupleHashMap.get(prototype.eventId).borderHighlightColor);
                     drawRect.setText(Text.literal(funcText).withColor(colorTupleHashMap.get(prototype.eventId).borderHighlightColor.getRGB()));
                     String eventName = (prototype.eventId.equals("entity")) ? "event" : prototype.eventId;
                     drawRect.setClickEffect((m) -> {
@@ -119,7 +119,6 @@ public class CTPScreen extends Screen {
 
                     if (eachIndex == prototype.content.size()-1) {
                         if (protoTypeIndex == displayPrototypes.size()-1) finished = true;
-                        numLines = displayPrototypes.size();
                         eachIndex = 0;
                         protoTypeIndex++;
                         break;
@@ -160,8 +159,8 @@ public class CTPScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        scrollTarget += verticalAmount * 4.0;
-        scrollTarget = Math.clamp(scrollTarget, 0, Math.max(0, (numLines*size.y)));
+        scrollTarget += verticalAmount * 5.0;
+        scrollTarget = Math.clamp(scrollTarget, 0, Math.max(0, ((numLines*size.y) - (ySize*size.y))+1));
         return super.mouseScrolled(mouseX,mouseY,horizontalAmount,verticalAmount);
     }
 
