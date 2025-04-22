@@ -51,7 +51,9 @@ public class CTPTracker extends Feature {
                                 "^Usage: \\n/plot data entities\\n/plot data vars\\n/plot data tasks\\n/plot data players\\n/plot data plot",
                                 "^Error: You must be in a plot to use this command!",
                                 "^Error: You need to be a plot developer to use this command!"
-                        ))
+                        )),
+                        new ArrayList<>(),
+                        new ArrayList<>(List.of("minecraft:entity.shulker.hurt_closed"))
                 ));
     }
 

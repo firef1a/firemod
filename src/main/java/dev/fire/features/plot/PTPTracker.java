@@ -32,7 +32,9 @@ public class PTPTracker extends Feature {
                                 "^ {39}\\nPlayer Count: \\d* \\(\\d* playing\\)\\n(.*)",
                                 "^Error: You must be in a plot to use this command!",
                                 "^Error: You need to be a plot developer to use this command!"
-                            ))
+                            )),
+                        new ArrayList<>(),
+                        new ArrayList<>(List.of("minecraft:entity.shulker.hurt_closed"))
                         ));
 
     }

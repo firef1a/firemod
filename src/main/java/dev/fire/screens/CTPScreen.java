@@ -64,7 +64,7 @@ public class CTPScreen extends Screen {
                 entry("event", new ColorTuple(new ARGB(oD, 0x48d5e8), new ARGB(hD, 0x8fe6f2))),
                 entry("entity", new ColorTuple(new ARGB(oD, 0xf0ed46), new ARGB(hD, 0xf2f085))),
                 entry("process", new ColorTuple(new ARGB(oD, 0x5bf056), new ARGB(hD, 0x98f595))),
-                entry("function", new ColorTuple(new ARGB(oD, 0x5670f0), new ARGB(hD, 0x90a1f5)))
+                entry("function", new ColorTuple(new ARGB(oD, 0x699cf5), new ARGB(hD, 0x9dbffa)))
         ));
 
         boolean enabled = true;

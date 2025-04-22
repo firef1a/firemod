@@ -32,6 +32,7 @@ public class CommandQueueHelper {
             CommandQueue command = commandQueue.removeFirst();
             CommandHider.addSingleHiddenCommand(command.singleHider);
             CommandHider.addMultiHiddenCommand(command.multiHider);
+            CommandHider.addHiddenSoundFromEntity(command.entitySounds);
             ChatUtils.sendMessage(command.command);
             nextTimestamp = currentTimestamp + command.delay;
         }

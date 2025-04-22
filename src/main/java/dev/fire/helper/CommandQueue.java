@@ -8,13 +8,18 @@ public class CommandQueue {
     public long delay;
     public ArrayList<String> singleHider;
     public ArrayList<String> multiHider;
+    public ArrayList<String> entitySounds;
 
-
-    public CommandQueue(String command, long delay, ArrayList<String> singleHider, ArrayList multiHider) {
+    public CommandQueue(String command, long delay, ArrayList<String> singleHider, ArrayList<String> multiHider, ArrayList<String> entitySounds) {
         this.command = command;
         this.delay = delay;
         this.singleHider = singleHider;
         this.multiHider = multiHider;
+        this.entitySounds = entitySounds;
+    }
+
+    public CommandQueue(String command, long delay, ArrayList<String> singleHider, ArrayList<String> multiHider) {
+        this(command, delay, singleHider, multiHider, new ArrayList<>());
     }
     public CommandQueue(String command, long delay, ArrayList<String> singleHider) {
         this(command, delay, singleHider, new ArrayList<String>());

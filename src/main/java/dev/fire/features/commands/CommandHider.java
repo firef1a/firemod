@@ -4,6 +4,9 @@ import dev.fire.Mod;
 import dev.fire.features.Feature;
 import dev.fire.helper.CommandQueue;
 import dev.fire.helper.CommandQueueHelper;
+import net.minecraft.client.sound.Sound;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.PlaySoundFromEntityS2CPacket;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -13,10 +16,12 @@ import java.util.regex.Pattern;
 public class CommandHider extends Feature {
     public static ArrayList<ArrayList<String>> singleHiderList;
     public static ArrayList<String> multiHiderList;
+    public static ArrayList<String> entitySoundHiderList;
     public CommandHider() {
         init("commandhider", "Automated Command Hider", "Internal Feature, disable if it is hiding things it shouldn't");
         singleHiderList = new ArrayList<>();
         multiHiderList = new ArrayList<>();
+        entitySoundHiderList = new ArrayList<>();
     }
 
     /*
@@ -26,6 +31,8 @@ public class CommandHider extends Feature {
      */
     public static void addSingleHiddenCommand(ArrayList<String> text ) { singleHiderList.add(text); }
     public static void addMultiHiddenCommand(ArrayList<String> text ) { multiHiderList.addAll(text); }
+
+    public static void addHiddenSoundFromEntity(ArrayList<String> sound ) { entitySoundHiderList.addAll(sound); }
 
     @Override
     public void onChatMessage(Text message, CallbackInfo ci) {
@@ -60,6 +67,19 @@ public class CommandHider extends Feature {
         }
         for (int num : multiRemoveList) {
             multiHiderList.remove(num);
+        }
+    }
+
+    @Override
+    public void handlePacket(Packet<?> packet, CallbackInfo ci) {
+        if (packet instanceof PlaySoundFromEntityS2CPacket playSoundFromEntityS2CPacket) {
+            String sound = playSoundFromEntityS2CPacket.getSound().getIdAsString();
+            Mod.log(sound);
+            Mod.log(entitySoundHiderList.toString());
+            if (entitySoundHiderList.contains(sound)) {
+                entitySoundHiderList.remove(sound);
+                ci.cancel();;
+            }
         }
     }
 }
