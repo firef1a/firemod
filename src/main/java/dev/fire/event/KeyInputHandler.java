@@ -1,6 +1,7 @@
 package dev.fire.event;
 
 import dev.fire.Mod;
+import dev.fire.screens.CTPScreen;
 import dev.fire.screens.HudFeatureMoveScreen;
 import dev.fire.screens.PTPScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -13,7 +14,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
     public static final String KEY_CATEGORY = Mod.MOD_NAME;
-    public static KeyBinding openMenuKeybinding, openPTPKeybinding;
+    public static KeyBinding openMenuKeybinding, openPTPKeybinding, openCTPKeybinding;
 
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -28,6 +29,11 @@ public class KeyInputHandler {
             if (openPTPKeybinding.isPressed()) {
                 if (!(cScreen instanceof PTPScreen)) {
                     Mod.setCurrentScreen(new PTPScreen(Text.literal("PTP Screen"), cScreen));
+                }
+            }
+            if (openCTPKeybinding.isPressed()) {
+                if (!(cScreen instanceof CTPScreen)) {
+                    Mod.setCurrentScreen(new CTPScreen(Text.literal("CTP Screen"), cScreen));
                 }
             }
         });
@@ -46,6 +52,12 @@ public class KeyInputHandler {
                 "Open PTP Menu", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_G, // The keycode of the key
+                KEY_CATEGORY // The translation key of the keybinding's category.
+        ));
+        openCTPKeybinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "Open CTP Menu", // The translation key of the keybinding's name
+                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_H, // The keycode of the key
                 KEY_CATEGORY // The translation key of the keybinding's category.
         ));
 

@@ -15,12 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChatHud.class)
 public class MChatHud {
-    @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-    public void addMessage(Text message, CallbackInfo ci) {
-        if (message.getString().equals("◆ Welcome back to DiamondFire! ◆")) { CommandQueueHelper.addCurrentTimestamp(1250L); }
-        Features.implement(feature -> { feature.onChatMessage(message, ci); });
-    }
-
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     public Text inject(Text message) {
         return Features.editChatMessage(message);

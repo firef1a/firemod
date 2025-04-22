@@ -88,8 +88,8 @@ public class PTPScreen extends Screen {
         Point2i base = middle.subtract(size.x/2, (size.y*playerData.size()) / 2);
 
         ARGB rectColor = new ARGB(0.5, 0x00000);
-        ARGB borderColor = new ARGB(0.3, 0x3b97d4);
-        ARGB borderHighlightColor = new ARGB(0.65, 0x88c8f2);
+        ARGB borderColor = new ARGB(0.6, 0x3b97d4);
+        ARGB borderHighlightColor = new ARGB(0.85, 0x88c8f2);
 
         int i = 0;
         for (ClickPrototype clickPrototype : playerData) {

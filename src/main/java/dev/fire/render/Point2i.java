@@ -25,4 +25,7 @@ public class Point2i {
     public Point2i multiply(Point2d p) {
         return new Point2i((int) (x*p.x), (int) (y*p.y));
     }
+    public Point2i multiply(double dx, double dy) {
+        return new Point2i((int) (x*dx), (int) (y*dy));
+    }
 }
