@@ -12,8 +12,6 @@ import dev.fire.render.screenElements.Rect;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import org.python.antlr.ast.Str;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

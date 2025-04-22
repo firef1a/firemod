@@ -10,7 +10,6 @@ import dev.fire.features.plot.CPUDisplay;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.text.Text;
-import org.python.antlr.ast.Str;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

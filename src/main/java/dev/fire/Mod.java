@@ -70,7 +70,7 @@ public class Mod implements ClientModInitializer {
 
 		MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).isPresent() ? FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString() : null;
 
-		LOGGER.info("making it 50x easier to macro since when i wrote this garbage");
+		LOGGER.info("qr code detected! you have been reported");
 	}
 
 	public static String getPlayerName() { return Mod.MC.getSession().getUsername(); }

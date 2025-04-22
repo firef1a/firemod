@@ -5,7 +5,6 @@ import dev.fire.features.Feature;
 import dev.fire.helper.CommandQueue;
 import dev.fire.helper.CommandQueueHelper;
 import net.minecraft.text.Text;
-import org.python.antlr.ast.Str;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;

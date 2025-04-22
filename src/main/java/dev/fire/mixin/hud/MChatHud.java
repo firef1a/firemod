@@ -7,7 +7,6 @@ import dev.fire.helper.CommandQueue;
 import dev.fire.helper.CommandQueueHelper;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
-import org.python.antlr.ast.Call;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

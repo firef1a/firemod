@@ -15,8 +15,8 @@ import java.io.IOException;
 
 @Mixin(ClientConnection.class)
 public class MClientConnection {
-    @Inject(method = "handlePacket", at = @At("HEAD"))
-    private static <T extends PacketListener> void handlePacket(Packet<T> packet, net.minecraft.network.listener.PacketListener listener, CallbackInfo ci) throws IOException {
+    @Inject(method = "handlePacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;)V", at = @At("HEAD"))
+    private static <T extends PacketListener> void handlePacket(Packet<T> packet, net.minecraft.network.listener.PacketListener listener, CallbackInfo ci) {
         if (packet instanceof ChatMessageS2CPacket chatMessageS2CPacket) {
             Mod.log(chatMessageS2CPacket.body().content());
         }
