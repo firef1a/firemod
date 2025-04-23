@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.widget.EditBoxWidget;
 
 import static java.util.Map.entry;
 
@@ -29,33 +30,47 @@ public class CTPScreen extends Screen {
     public final Screen parentScreen;
     private ColorRect rect;
     private ArrayList<Rect> clickList;
+    private EditBoxWidget searchBox;
     private int numLines;
     private static double scrollAmount = 0, scrollTarget = 0;
+
     private final Point2i size;
     private final int xSize = 5;
     private final int ySize = 22;
+    private final Point2i baseSize;
+    private final Point2i middle;
+    private final Point2i base;
 
     public CTPScreen(Text title, Screen parentScreen) {
         super(title);
         this.parentScreen = parentScreen;
         CTPTracker.sendCTPSuggestion();
+
         numLines = 0;
         size = new Scaler(0.135, 0.025).getScreenPosition();
+        baseSize = new Point2i(size.x * xSize, size.y * ySize);
+        middle = new Scaler(0.5, 0.5).getScreenPosition();
+        base = middle.subtract((size.x*xSize)/2, (size.y*ySize) / 2);
     }
 
     @Override
+    protected void init() {
+        int height = textRenderer.fontHeight * 2;
+        searchBox = new EditBoxWidget(Mod.MC.textRenderer, base.x, base.y - height, baseSize.x, height, Text.literal("Type Here.."), Text.empty());
+        addDrawable(searchBox);
+        setInitialFocus(searchBox);
+    }
+
+
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         record CTPPrototype(ArrayList<String> content, String eventId) {};
         Point2i mouse = new Point2i(mouseX, mouseY);
 
         clickList = new ArrayList<>();
-        Point2i middle = new Scaler(0.5, 0.5).getScreenPosition();
-
-        Point2i base = middle.subtract((size.x*xSize)/2, (size.y*ySize) / 2);
-        Point2i baseSize = new Point2i(size.x * xSize, size.y * ySize);
 
         ARGB rectColor = new ARGB(0.5, 0x000000);
-
         record ColorTuple(ARGB borderColor, ARGB borderHighlightColor) {};
 
         double oD = 0.60;
@@ -85,9 +100,13 @@ public class CTPScreen extends Screen {
         Converts hashmap into an array
          */
         for (String eventId : eventOrder) {
-            ArrayList<String> dataList = new ArrayList<>(CTPTracker.ctpResult.getOrDefault(eventId, new ArrayList<>()));
+            ArrayList<String> dataList = new ArrayList<>();
+            for (String data : CTPTracker.ctpResult.getOrDefault(eventId, new ArrayList<>())) {
+                if (searchBox.getText().isEmpty() || data.toLowerCase().contains(searchBox.getText().toLowerCase())) dataList.add(data);
+            }
             if (!dataList.isEmpty()) displayPrototypes.add(new CTPPrototype(dataList, eventId));
         }
+        searchBox.setText(searchBox.getText().replace("\n", ""));
 
         /*
         Draw each code line
@@ -138,16 +157,11 @@ public class CTPScreen extends Screen {
     }
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Point2i mouse = new Point2i((int) mouseX, (int) mouseY);
 
         for (Rect rect : clickList) {
-            if (rect.containsPoint(mouse)) {
+            if (rect.containsPoint(mouse) && new Rect(base, baseSize).containsPoint(mouse)) {
                 rect.onClick(mouse);
                 close();
                 break;

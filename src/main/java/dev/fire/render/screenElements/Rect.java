@@ -41,6 +41,10 @@ public class Rect implements RendRect {
     public Rect(Point2i position, Point2i size, ARGB rectColor) {
         this(position, size, rectColor, null, null, null);
     }
+    public Rect(Point2i position, Point2i size) {
+        this(position, size, null, null, null, null);
+    }
+
 
     public void setClickEffect(Consumer<Point2i> clickEffect) { this.clickEffect = clickEffect; }
     public void setText(Text text) { this.text = text; }
