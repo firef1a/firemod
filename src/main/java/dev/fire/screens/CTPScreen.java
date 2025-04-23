@@ -97,7 +97,7 @@ public class CTPScreen extends Screen {
         /*
         Converts hashmap into an array
          */
-        searchBox.setText(searchBox.getText().replace("\n", ""));
+        //searchBox.setText(searchBox.getText().replace("\n", ""));
         for (String eventId : eventOrder) {
             ArrayList<String> dataList = new ArrayList<>();
             for (String data : CTPTracker.ctpResult.getOrDefault(eventId, new ArrayList<>())) {
