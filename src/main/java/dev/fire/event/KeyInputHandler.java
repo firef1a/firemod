@@ -21,7 +21,7 @@ public class KeyInputHandler {
             Screen cScreen = Mod.getCurrentScreen();
 
             if (openMenuKeybinding.wasPressed()) {
-                if (!(cScreen instanceof HudFeatureMoveScreen)) {
+                if (!HudFeatureMoveScreen.isOpen()) {
                     Mod.setCurrentScreen(new HudFeatureMoveScreen(Text.literal("HUD Config Screen"), cScreen));
                 }
             }

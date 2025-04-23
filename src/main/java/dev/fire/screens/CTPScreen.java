@@ -11,6 +11,9 @@ import dev.fire.render.Scaler;
 import dev.fire.render.hudElements.ColorRect;
 import dev.fire.render.screenElements.Rect;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.navigation.GuiNavigation;
+import net.minecraft.client.gui.navigation.GuiNavigationPath;
+import net.minecraft.client.gui.navigation.NavigationDirection;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
@@ -55,6 +58,7 @@ public class CTPScreen extends Screen {
         searchBox = new EditBoxWidget(Mod.MC.textRenderer, base.x, base.y - height, baseSize.x, height, Text.empty(), Text.empty());
         addDrawable(searchBox);
         setInitialFocus(searchBox);
+        super.init();
     }
 
 
@@ -172,7 +176,6 @@ public class CTPScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        super.keyPressed(keyCode, scanCode, modifiers);
         String searchText = searchBox.getText().replace("\n", "");
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             for (String eventId : eventOrder) {
@@ -180,13 +183,59 @@ public class CTPScreen extends Screen {
                     if (searchText.isEmpty() || data.toLowerCase().contains(searchText.toLowerCase())) {
                         String eventName = (eventId.equals("entity")) ? "event" : eventId;
                         CommandQueueHelper.addCommand(new CommandQueue("/ctp " + eventName + " " + data));
-                        close();
-                        return true;
+                        this.close();
+                        return false;
                     }
                 }
             }
         }
+
+        else if (keyCode == 256 && this.shouldCloseOnEsc()) {
+            this.close();
+            return true;
+        } else if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        } else {
+            Object var10000;
+            switch (keyCode) {
+                case 259:
+                case 260:
+                case 261:
+                default:
+                    var10000 = null;
+                    break;
+                case 262:
+                    var10000 = this.getArrowNavigation(NavigationDirection.RIGHT);
+                    break;
+                case 263:
+                    var10000 = this.getArrowNavigation(NavigationDirection.LEFT);
+                    break;
+                case 264:
+                    var10000 = this.getArrowNavigation(NavigationDirection.DOWN);
+                    break;
+                case 265:
+                    var10000 = this.getArrowNavigation(NavigationDirection.UP);
+            }
+
+            GuiNavigation guiNavigation = (GuiNavigation) var10000;
+            if (guiNavigation != null) {
+                GuiNavigationPath guiNavigationPath = super.getNavigationPath((GuiNavigation)guiNavigation);
+
+                if (guiNavigationPath != null) {
+                    this.switchFocus(guiNavigationPath);
+                }
+            }
+
+            return false;
+        }
+
+
+        //super.keyPressed(keyCode, scanCode, modifiers);
         return false;
+    }
+
+    private GuiNavigation.Arrow getArrowNavigation(NavigationDirection direction) {
+        return new GuiNavigation.Arrow(direction);
     }
 
     @Override
