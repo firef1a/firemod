@@ -9,6 +9,11 @@ Adds various qol features for staff and support members on [mcdiamondfire.com](h
 - Item Lore Viewer HUD
 - Hypercube Item Tag viewer in item lore
 - Menu that you can view and teleport to any code line on the plot.
+  
+## Hotkeys
+- Y to open hud editor
+- G to open /ptp menu
+- H to open /ctp menu
 
 ## Dependancies
 - YACL >= 3.6.1
