@@ -30,7 +30,7 @@ public class CTPScreen extends Screen {
     private ColorRect rect;
     private ArrayList<Rect> clickList;
     private int numLines;
-    private double scrollAmount, scrollTarget;
+    private static double scrollAmount = 0, scrollTarget = 0;
     private final Point2i size;
     private final int xSize = 5;
     private final int ySize = 22;
