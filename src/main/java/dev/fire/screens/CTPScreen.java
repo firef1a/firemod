@@ -56,7 +56,7 @@ public class CTPScreen extends Screen {
     @Override
     protected void init() {
         int height = textRenderer.fontHeight * 2;
-        searchBox = new EditBoxWidget(Mod.MC.textRenderer, base.x, base.y - height, baseSize.x, height, Text.literal("Type Here.."), Text.empty());
+        searchBox = new EditBoxWidget(Mod.MC.textRenderer, base.x, base.y - height, baseSize.x, height, Text.empty(), Text.empty());
         addDrawable(searchBox);
         setInitialFocus(searchBox);
     }
