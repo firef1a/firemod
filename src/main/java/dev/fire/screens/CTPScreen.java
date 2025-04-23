@@ -3,8 +3,6 @@ package dev.fire.screens;
 import dev.fire.Mod;
 import dev.fire.features.plot.CTPState;
 import dev.fire.features.plot.CTPTracker;
-import dev.fire.features.plot.PTPState;
-import dev.fire.features.plot.PTPTracker;
 import dev.fire.helper.CommandQueue;
 import dev.fire.helper.CommandQueueHelper;
 import dev.fire.render.ARGB;
@@ -12,23 +10,20 @@ import dev.fire.render.Point2i;
 import dev.fire.render.Scaler;
 import dev.fire.render.hudElements.ColorRect;
 import dev.fire.render.screenElements.Rect;
-import dev.fire.utils.ChatUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import net.minecraft.client.gui.widget.EditBoxWidget;
+import org.lwjgl.glfw.GLFW;
 
 import static java.util.Map.entry;
 
 public class CTPScreen extends Screen {
     public final Screen parentScreen;
-    private ColorRect rect;
     private ArrayList<Rect> clickList;
     private EditBoxWidget searchBox;
     private int numLines;
@@ -38,8 +33,9 @@ public class CTPScreen extends Screen {
     private final int xSize = 5;
     private final int ySize = 22;
     private final Point2i baseSize;
-    private final Point2i middle;
     private final Point2i base;
+
+    private static final ArrayList<String> eventOrder = new ArrayList<>(List.of("event", "function", "process", "entity"));
 
     public CTPScreen(Text title, Screen parentScreen) {
         super(title);
@@ -49,7 +45,7 @@ public class CTPScreen extends Screen {
         numLines = 0;
         size = new Scaler(0.135, 0.025).getScreenPosition();
         baseSize = new Point2i(size.x * xSize, size.y * ySize);
-        middle = new Scaler(0.5, 0.5).getScreenPosition();
+        Point2i middle = new Scaler(0.5, 0.5).getScreenPosition();
         base = middle.subtract((size.x*xSize)/2, (size.y*ySize) / 2);
     }
 
@@ -65,13 +61,13 @@ public class CTPScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        record CTPPrototype(ArrayList<String> content, String eventId) {};
+        record CTPPrototype(ArrayList<String> content, String eventId) {}
         Point2i mouse = new Point2i(mouseX, mouseY);
 
         clickList = new ArrayList<>();
 
         ARGB rectColor = new ARGB(0.5, 0x000000);
-        record ColorTuple(ARGB borderColor, ARGB borderHighlightColor) {};
+        record ColorTuple(ARGB borderColor, ARGB borderHighlightColor) {}
 
         double oD = 0.60;
         double hD = 1;
@@ -93,12 +89,11 @@ public class CTPScreen extends Screen {
         context.enableScissor(baseRect.getX1(), baseRect.getY1(), baseRect.getX2(), baseRect.getY2());
         baseRect.render(context, mouse);
 
-        ArrayList<String> eventOrder = new ArrayList<>(List.of("event", "function", "process", "entity"));
         ArrayList<CTPPrototype> displayPrototypes = new ArrayList<>();
-
         /*
         Converts hashmap into an array
          */
+        searchBox.setText(searchBox.getText().replace("\n", ""));
         for (String eventId : eventOrder) {
             ArrayList<String> dataList = new ArrayList<>();
             for (String data : CTPTracker.ctpResult.getOrDefault(eventId, new ArrayList<>())) {
@@ -106,7 +101,6 @@ public class CTPScreen extends Screen {
             }
             if (!dataList.isEmpty()) displayPrototypes.add(new CTPPrototype(dataList, eventId));
         }
-        searchBox.setText(searchBox.getText().replace("\n", ""));
 
         /*
         Draw each code line
@@ -130,9 +124,7 @@ public class CTPScreen extends Screen {
                     Rect drawRect = new Rect(position, size, new ARGB(0.3,0x000000), colorTupleHashMap.get(prototype.eventId).borderColor, colorTupleHashMap.get(prototype.eventId).borderHighlightColor);
                     drawRect.setText(Text.literal(funcText).withColor(colorTupleHashMap.get(prototype.eventId).borderHighlightColor.getRGB()));
                     String eventName = (prototype.eventId.equals("entity")) ? "event" : prototype.eventId;
-                    drawRect.setClickEffect((m) -> {
-                        CommandQueueHelper.addCommand(new CommandQueue("/ctp " + eventName + " " + text));
-                    });
+                    drawRect.setClickEffect((m) -> CommandQueueHelper.addCommand(new CommandQueue("/ctp " + eventName + " " + text)));
                     clickList.add(drawRect);
                     drawRect.render(context, mouse);
 
@@ -176,6 +168,25 @@ public class CTPScreen extends Screen {
         scrollTarget += verticalAmount * 5.0;
         scrollTarget = Math.clamp(scrollTarget, 0, Math.max(0, ((numLines*size.y) - (ySize*size.y))+1));
         return super.mouseScrolled(mouseX,mouseY,horizontalAmount,verticalAmount);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        super.keyPressed(keyCode, scanCode, modifiers);
+        String searchText = searchBox.getText().replace("\n", "");
+        if (keyCode == GLFW.GLFW_KEY_ENTER) {
+            for (String eventId : eventOrder) {
+                for (String data : CTPTracker.ctpResult.getOrDefault(eventId, new ArrayList<>())) {
+                    if (searchText.isEmpty() || data.toLowerCase().contains(searchText.toLowerCase())) {
+                        String eventName = (eventId.equals("entity")) ? "event" : eventId;
+                        CommandQueueHelper.addCommand(new CommandQueue("/ctp " + eventName + " " + data));
+                        close();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override

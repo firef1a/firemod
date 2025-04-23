@@ -20,19 +20,19 @@ public class KeyInputHandler {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             Screen cScreen = Mod.getCurrentScreen();
 
-            if (openMenuKeybinding.isPressed()) {
+            if (openMenuKeybinding.wasPressed()) {
                 if (!(cScreen instanceof HudFeatureMoveScreen)) {
                     Mod.setCurrentScreen(new HudFeatureMoveScreen(Text.literal("HUD Config Screen"), cScreen));
                 }
             }
 
-            if (openPTPKeybinding.isPressed()) {
-                if (!(cScreen instanceof PTPScreen)) {
+            if (openPTPKeybinding.wasPressed()) {
+                if (!PTPScreen.isOpen()) {
                     Mod.setCurrentScreen(new PTPScreen(Text.literal("PTP Screen"), cScreen));
                 }
             }
-            if (openCTPKeybinding.isPressed()) {
-                if (!(cScreen instanceof CTPScreen)) {
+            if (openCTPKeybinding.wasPressed()) {
+                if (!(CTPScreen.isOpen())) {
                     Mod.setCurrentScreen(new CTPScreen(Text.literal("CTP Screen"), cScreen));
                 }
             }
