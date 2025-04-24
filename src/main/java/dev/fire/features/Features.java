@@ -2,6 +2,8 @@ package dev.fire.features;
 
 import dev.fire.features.chat.ModVanishTracker;
 import dev.fire.features.chat.SessionQuestionHud;
+import dev.fire.features.chat.chathud.SupportChatHud;
+import dev.fire.features.commands.CommandAliaser;
 import dev.fire.features.commands.CommandHider;
 import dev.fire.features.item.ItemLoreViewer;
 import dev.fire.features.item.ItemTagViewer;
@@ -30,6 +32,8 @@ public class Features {
         //add(new PaperDollFeature());
         add(new PTPTracker());
         add(new CTPTracker());
+        add(new SupportChatHud());
+        add(new CommandAliaser());
     }
 
     private static void add(Feature feature) { featureMap.put(feature.getFeatureID(), feature); }

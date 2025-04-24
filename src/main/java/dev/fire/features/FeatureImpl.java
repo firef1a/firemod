@@ -34,7 +34,7 @@ public interface FeatureImpl {
 
     void renderHUD(DrawContext context, RenderTickCounter tickCounter);
     void handlePacket(Packet<?> packet, CallbackInfo ci);
-    void sentPacket(Packet<?> packet, CallbackInfo ci);
+    void sendPacket(Packet<?> packet, CallbackInfo ci);
 
     Text modifyChatMessage(Text base, Text modified);
     void onChatMessage(Text message, CallbackInfo ci);

@@ -5,6 +5,7 @@ import dev.fire.Mod;
 import dev.fire.features.Features;
 import dev.fire.helper.CommandQueueHelper;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.message.FilterMask;
 import net.minecraft.network.message.MessageBody;
@@ -18,6 +19,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
+import net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,5 +36,10 @@ public class MClientConnection {
         }
         //Mod.log(packet.getPacketId().toString());
         Features.implement(feature -> feature.handlePacket(packet, ci));
+    }
+
+    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/PacketCallbacks;Z)V", at = @At("HEAD"), cancellable = true)
+    private <T extends PacketListener> void handlePacket(Packet<?> packet, @Nullable PacketCallbacks callbacks, boolean flush, CallbackInfo ci) {
+        Features.implement(feature -> feature.sendPacket(packet, ci));
     }
 }

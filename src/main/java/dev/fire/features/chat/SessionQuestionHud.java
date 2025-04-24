@@ -274,7 +274,7 @@ public class SessionQuestionHud extends Feature {
     public Text modifyChatMessage(Text base, Text modified) {
         String text = base.getString();
         Matcher matcher = Pattern.compile("^\\[SUPPORT] (.*) joined the support queue\\. ▶ Reason: (.*)", Pattern.CASE_INSENSITIVE).matcher(text);
-        if (matcher.find() && false) {
+        if (matcher.find()) {
             return Text.empty().append(modified).append(Text.literal(" [ACCEPT]").withColor(0xffdc7a))
                     .styled((style -> style
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/support accept " + matcher.group(1)))
@@ -338,7 +338,8 @@ public class SessionQuestionHud extends Feature {
             supportQuestions.put(matcher.group(1), new SupportQuestion(matcher.group(1), matcher.group(2), matcher.group(3), System.currentTimeMillis()));
         }
 
-        matcher = Pattern.compile("^ {39}\\n» (.{3,16}) has answered (.{3,16})'s question:\\n\\n.*\\n {39}", Pattern.CASE_INSENSITIVE).matcher(text);
+        matcher = Pattern.compile("^ {39}\\n» (.{3,16}) has answered (.{3,16})'(?:s|) question:\\n\\n.*\\n {39}", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) { supportQuestions.remove(matcher.group(2)); }
+        //                                       \n» CamTMH has answered N_Enders' question:\n\nNo.\n
     }
 }

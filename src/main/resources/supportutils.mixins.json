@@ -2,10 +2,11 @@
   "required": true,
   "package": "dev.fire.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
+  "client": [
     "hud.MChatHud",
+    "hud.MToastManager",
     "network.MClientConnection",
-    "hud.MToastManager"
+    "hud.MChatScreen"
   ],
   "injectors": {
     "defaultRequire": 1

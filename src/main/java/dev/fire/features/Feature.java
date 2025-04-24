@@ -26,7 +26,6 @@ public abstract class Feature implements FeatureImpl {
     private String featureName;
     private String description;
     public boolean isEnabled;
-
     protected void init(String featureID, String featureName, String description) {
         this.featureID = featureID;
         this.featureName = featureName;
@@ -44,7 +43,7 @@ public abstract class Feature implements FeatureImpl {
     public void renderWorld(WorldRenderContext worldRenderContext) { }
     public void renderHUD(DrawContext context, RenderTickCounter tickCounter) { }
     public void handlePacket(Packet<?> packet, CallbackInfo ci) { }
-    public void sentPacket(Packet<?> packet, CallbackInfo ci) { }
+    public void sendPacket(Packet<?> packet, CallbackInfo ci) { }
     public Text modifyChatMessage(Text base, Text modified) { return modified; }
     public void onChatMessage(Text message, CallbackInfo ci) { }
     public void clientStart(MinecraftClient minecraftClient) { }
