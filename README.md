@@ -1,6 +1,7 @@
 Adds various qol features for staff and support members on [mcdiamondfire.com](https://mcdiamondfire.com/).
-
 You may also download this mod here [https://modrinth.com/mod/supportutils](https://modrinth.com/mod/supportutils)
+
+If you have any questions/suggestions dm me on discord @ fire_h
 
 ## Features:
 - /support queue on join
