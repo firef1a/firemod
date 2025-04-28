@@ -1,16 +1,10 @@
 package dev.fire.mixin.network;
 
-import com.mojang.brigadier.suggestion.Suggestion;
-import dev.fire.Mod;
 import dev.fire.features.Features;
 import dev.fire.helper.CommandQueueHelper;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.listener.PacketListener;
-import net.minecraft.network.message.FilterMask;
-import net.minecraft.network.message.MessageBody;
-import net.minecraft.network.message.MessageSignatureData;
-import net.minecraft.network.message.MessageType;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.text.Text;
@@ -18,13 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
-import net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
 @Mixin(ClientConnection.class)
 public class MClientConnection {
@@ -36,6 +25,15 @@ public class MClientConnection {
         }
         //Mod.log(packet.getPacketId().toString());
         Features.implement(feature -> feature.handlePacket(packet, ci));
+    }
+
+    @ModifyVariable(method = "handlePacket", at = @At("HEAD"), argsOnly = true)
+    private static <T extends PacketListener> Packet<T> handlePacket(Packet<T> packet) {
+        if (packet instanceof GameMessageS2CPacket(Text content, boolean overlay)) {
+            Text new_context = Features.editChatMessage(content);
+            return (Packet<T>) new GameMessageS2CPacket(new_context, overlay);
+        }
+        return packet;
     }
 
     @Inject(method = "send(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/PacketCallbacks;Z)V", at = @At("HEAD"), cancellable = true)

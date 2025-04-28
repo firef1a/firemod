@@ -2,6 +2,7 @@ package dev.fire.features.chat.chathud;
 
 import dev.fire.Mod;
 import dev.fire.features.Feature;
+import dev.fire.features.Features;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.ChatScreen;
@@ -34,6 +35,7 @@ public class SupportChatHud extends Feature {
     }
     @Override
     public void renderHUD(DrawContext context, RenderTickCounter tickCounter) {
+        if (!this.isEnabled()) return;
         if (!(Mod.MC.currentScreen instanceof ChatScreen)) {
             hud.render(context, tick, 0,0, Mod.MC.inGameHud.getChatHud().isChatFocused());
         }

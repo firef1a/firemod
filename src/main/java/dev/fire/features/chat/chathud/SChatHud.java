@@ -329,9 +329,9 @@ public class SChatHud {
         if (messageHandler.getUnprocessedMessageCount() == 0L) {
             return false;
         }
-        double d = (mouseX + xShift) - 2.0;
+        double d = (mouseX) - 2.0;
         double e = (double)this.client.getWindow().getScaledHeight() - mouseY - 40.0;
-        if (d <= (double)MathHelper.floor((double)this.getWidth() / this.getChatScale()) && e < 0.0 && e > (double)MathHelper.floor(-9.0 * this.getChatScale())) {
+        if (d <= this.client.getWindow().getScaledWidth() && d >= xShift && e < 0.0 && e > (double)MathHelper.floor(-9.0 * this.getChatScale())) {
             messageHandler.process();
             return true;
         }
@@ -355,7 +355,7 @@ public class SChatHud {
         ChatHudLine.Visible visible;
         MessageIndicator messageIndicator;
         double e;
-        double d = this.toChatLineX(mouseX+xShift);
+        double d = this.toChatLineX(mouseX);
         int i = this.getMessageIndex(d, e = this.toChatLineY(mouseY));
         if (i >= 0 && i < this.visibleMessages.size() && (messageIndicator = (visible = this.visibleMessages.get(i)).indicator()) != null && this.isXInsideIndicatorIcon(d, visible, messageIndicator)) {
             return messageIndicator;
@@ -377,7 +377,7 @@ public class SChatHud {
     }
 
     private double toChatLineX(double x) {
-        return (x) / this.getChatScale() - 4.0;
+        return (x-xShift) / this.getChatScale() - 4.0;
     }
 
     private double toChatLineY(double y) {

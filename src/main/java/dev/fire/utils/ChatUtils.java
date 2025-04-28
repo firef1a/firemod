@@ -17,11 +17,11 @@ public class ChatUtils {
     public static void displayMessage(Text content) {
         if (Mod.MC.player != null) {
             Mod.MC.player.sendMessage(
-                    Text.literal("[" + Mod.MOD_NAME.toUpperCase() +"]").withColor(0xf57d5b)
+                    Text.literal("[" + Mod.MOD_NAME.toUpperCase() +"]").withColor(0x63a4f2)
                             .append(
                                     Text.literal(" ")
                                             .append(content)
-                                            .withColor(0xfff1ed)
+                                            .withColor(0xc9ddf5)
                             ), false);
         }
     }

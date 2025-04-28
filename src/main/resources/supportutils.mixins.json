@@ -3,7 +3,6 @@
   "package": "dev.fire.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "hud.MChatHud",
     "hud.MToastManager",
     "network.MClientConnection",
     "hud.MChatScreen"

@@ -317,7 +317,7 @@ public class SessionQuestionHud extends Feature {
         matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) entered a session with (.{3,16})\\..*", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) {
             String supporteeName = matcher.group(2);
-            Mod.log(matcher.group(1) + " " + playerName);
+            //Mod.log(matcher.group(1) + " " + playerName);
             if (matcher.group(1).equals(playerName)) {
                 isInSupportSession = true;
                 currentSupportSession = new SessionEntry(supporteeName, getSupportQueue(supporteeName).reason, System.currentTimeMillis());
