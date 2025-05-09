@@ -80,7 +80,7 @@ public class Mod implements ClientModInitializer {
 
 		MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).isPresent() ? FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString() : null;
 
-		LOGGER.info("qr code detected! you have been reported");
+		LOGGER.info(getPlayerName() + " is in the sudoers file, sending nukes now... 3... 2... 1...");
 	}
 
 	public static String getPlayerName() { return Mod.MC.getSession().getUsername(); }

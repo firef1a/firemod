@@ -52,7 +52,7 @@ public class PTPScreen extends Screen {
 
         for (String name : PTPTracker.playerData.keySet()) {
             String val = PTPTracker.playerData.get(name);
-            Text text = Text.literal(name + " - " + val).withColor(colorText.get(val));
+            Text text = Text.literal(name + " - " + val).withColor(colorText.getOrDefault(val, 0xFFFFFF));
             int w = Mod.MC.textRenderer.getWidth(name + " - " + val)+40;
 
             Consumer<Point2i> effect = (point2i -> { CommandQueueHelper.addCommand(new CommandQueue("/ptp " + name)); });
@@ -133,10 +133,7 @@ public class PTPScreen extends Screen {
     public boolean shouldPause() {
         return false;
     }
-    @Override
-    public boolean shouldCloseOnEsc() {
-        return true;
-    }
+
     @Override
     public void close() {
         Mod.setCurrentScreen(parentScreen);
