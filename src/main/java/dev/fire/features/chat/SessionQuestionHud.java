@@ -79,7 +79,7 @@ public class SessionQuestionHud extends Feature {
         for (String key : keys) {
             SupportQuestion question = supportQuestions.get(key);
             if (currentTime - question.timestamp > 60L * 60L * 1000L) {
-                ChatUtils.displayMessage(Text.literal(question.name + "'s question was removed because it timed out.").withColor(lighterQuestion));
+                ChatUtils.displayMessage(Text.literal(question.name + "'s question was removed because it timed out."));
                 supportQuestions.remove(key);
             }
         }

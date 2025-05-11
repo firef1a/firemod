@@ -5,6 +5,8 @@ import dev.fire.features.Feature;
 import dev.fire.features.Features;
 import dev.fire.features.chat.chathud.SChatHud;
 import dev.fire.features.chat.chathud.SupportChatHud;
+import dev.fire.utils.ChatUtils;
+import dev.fire.utils.ServerVerifier;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
@@ -12,6 +14,7 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,6 +28,8 @@ public class MChatScreen {
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
     public void mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
         if (!Features.featureMap.get("supportchathud").isEnabled) return;
+        if (!ServerVerifier.isPlayingDiamondfire()) return;
+
         if (mouseX > (double) Mod.getWindowWidth() /2) {
             SupportChatHud.hud.scroll((int) verticalAmount);
             cir.cancel();
@@ -34,6 +39,8 @@ public class MChatScreen {
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!Features.featureMap.get("supportchathud").isEnabled) return;
+        if (!ServerVerifier.isPlayingDiamondfire()) return;
+
         SChatHud hud = SupportChatHud.hud;
         hud.render(context, SupportChatHud.tick, mouseX, mouseY, true);
         MessageIndicator messageIndicator = hud.getIndicatorAt(mouseX, mouseY);
@@ -50,11 +57,24 @@ public class MChatScreen {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (!Features.featureMap.get("supportchathud").isEnabled) return;
+        if (!ServerVerifier.isPlayingDiamondfire()) return;
+
+        if (SupportChatHud.hud.mouseClicked(mouseX-SupportChatHud.hud.xShift, mouseY)) {
+            cir.setReturnValue(true);
+            return;
+        };
+
         if (button == 0) {
-            if (SupportChatHud.hud.mouseClicked(mouseX, mouseY)) {
+            SChatHud chatHud = SupportChatHud.hud;
+            if (chatHud.mouseClicked(mouseX, mouseY)) {
                 cir.setReturnValue(true);
                 return;
-            };
+            }
+            Style style = chatHud.getTextStyleAt(mouseX, mouseY);
+            if (style != null) {
+                Mod.getCurrentScreen().handleTextClick(style);
+                cir.setReturnValue(true);
+            }
         }
     }
 

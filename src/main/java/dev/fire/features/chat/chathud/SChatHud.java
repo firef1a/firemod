@@ -3,6 +3,7 @@ package dev.fire.features.chat.chathud;
 import com.google.common.collect.Lists;
 import com.mojang.logging.LogUtils;
 import dev.fire.Mod;
+import dev.fire.utils.ChatUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -53,7 +54,7 @@ public class SChatHud {
     private int scrolledLines;
     private boolean hasUnreadNewMessages;
     private final List<RemovalQueuedMessage> removalQueue = new ArrayList<RemovalQueuedMessage>();
-    private int xShift;
+    public int xShift;
 
     public SChatHud(MinecraftClient client) {
         this.client = client;
@@ -322,16 +323,14 @@ public class SChatHud {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY) {
-        if (!this.isChatFocused() || this.client.options.hudHidden || this.isChatHidden()) {
-            return false;
-        }
         MessageHandler messageHandler = this.client.getMessageHandler();
+
         if (messageHandler.getUnprocessedMessageCount() == 0L) {
             return false;
         }
         double d = (mouseX) - 2.0;
         double e = (double)this.client.getWindow().getScaledHeight() - mouseY - 40.0;
-        if (d <= this.client.getWindow().getScaledWidth() && d >= xShift && e < 0.0 && e > (double)MathHelper.floor(-9.0 * this.getChatScale())) {
+        if (d <= this.client.getWindow().getScaledWidth() && d >= 0 && e < 0.0 && e > (double)MathHelper.floor(-9.0 * this.getChatScale())) {
             messageHandler.process();
             return true;
         }
@@ -377,7 +376,7 @@ public class SChatHud {
     }
 
     private double toChatLineX(double x) {
-        return (x-xShift) / this.getChatScale() - 4.0;
+        return (x - xShift) / this.getChatScale() - 4.0;
     }
 
     private double toChatLineY(double y) {

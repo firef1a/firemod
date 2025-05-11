@@ -63,25 +63,21 @@ public class Config {
 
 
         for (String key : Features.featureMap.keySet()) {
-            OptionGroup.Builder hudList = OptionGroup.createBuilder();
             Feature feature = Features.featureMap.get(key);
-            hudList.name(Text.literal(feature.getFeatureName()))
-                    .description(OptionDescription.of(Text.literal(feature.getDescription())))
-                    .option(Option.createBuilder(boolean.class)
-                            .name(Text.literal(feature.getFeatureName() + " Enabled"))
-                            .description(OptionDescription.createBuilder()
-                                    .text(Text.literal("Enable " + feature.getFeatureName()))
-                                    .build())
-                            .binding(
-                                    feature.isEnabled(),
-                                    feature::isEnabled,
-                                    feature::setIsEnabled
-                            )
-                            .controller(TickBoxControllerBuilder::create)
-                            .build());
+            Option<Boolean> option = Option.createBuilder(boolean.class)
+                    .name(Text.literal(feature.getFeatureName()))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.literal(feature.getFeatureName()))
+                            .build())
+                    .binding(
+                            feature.isEnabled(),
+                            feature::isEnabled,
+                            feature::setIsEnabled
+                    )
+                    .controller(TickBoxControllerBuilder::create)
+                    .build();
 
-            OptionGroup returnList = hudList.build();
-            configBuilder.group(returnList);
+            configBuilder.option(option);
         }
 
 

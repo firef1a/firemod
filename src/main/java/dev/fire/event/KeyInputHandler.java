@@ -4,6 +4,8 @@ import dev.fire.Mod;
 import dev.fire.screens.CTPScreen;
 import dev.fire.screens.HudFeatureMoveScreen;
 import dev.fire.screens.PTPScreen;
+import dev.fire.utils.ChatUtils;
+import dev.fire.utils.ServerVerifier;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -27,12 +29,16 @@ public class KeyInputHandler {
             }
 
             if (openPTPKeybinding.wasPressed()) {
-                if (!PTPScreen.isOpen()) {
+                if (!ServerVerifier.isPlayingDiamondfire())  {
+                    ChatUtils.displayMessage(Text.literal("You are not on mcdiamondfire.com."));
+                } else if (!PTPScreen.isOpen()) {
                     Mod.setCurrentScreen(new PTPScreen(Text.literal("PTP Screen"), cScreen));
                 }
             }
             if (openCTPKeybinding.wasPressed()) {
-                if (!(CTPScreen.isOpen())) {
+                if (!ServerVerifier.isPlayingDiamondfire())  {
+                    ChatUtils.displayMessage(Text.literal("You are not on mcdiamondfire.com."));
+                } else if (!(CTPScreen.isOpen())) {
                     Mod.setCurrentScreen(new CTPScreen(Text.literal("CTP Screen"), cScreen));
                 }
             }

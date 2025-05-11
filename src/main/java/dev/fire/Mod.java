@@ -24,7 +24,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
@@ -80,7 +79,7 @@ public class Mod implements ClientModInitializer {
 
 		MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).isPresent() ? FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString() : null;
 
-		LOGGER.info(getPlayerName() + " is in the sudoers file, sending nukes now... 3... 2... 1...");
+        LOGGER.info("{} is not in the sudoers file, sending nukes now... 3... 2... 1...", getPlayerName());
 	}
 
 	public static String getPlayerName() { return Mod.MC.getSession().getUsername(); }

@@ -12,6 +12,8 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class SupportChatHud extends Feature {
@@ -26,15 +28,21 @@ public class SupportChatHud extends Feature {
     public void onChatMessage(Text message, CallbackInfo ci) {
         String text = message.getString();
 
-        boolean b1 = Pattern.compile("^» Support Question: \\(Click to answer\\)\\nAsked by (.{3,16}) (.{3,16})\\n(.*)", Pattern.CASE_INSENSITIVE).matcher(text).find();
-        boolean b2 = Pattern.compile("^ {39}\\n» (.{3,16}) has answered (.{3,16})'(?:s|) question:\\n\\n.*\\n {39}", Pattern.CASE_INSENSITIVE).matcher(text).find();
-        boolean b3 = Pattern.compile("^#\\d* (.{3,16}) ▶ (\\d*):(\\d*):(\\d*)", Pattern.CASE_INSENSITIVE).matcher(text).find();
-        boolean b4 = Pattern.compile("^ {2}▶ Reason: (.*)", Pattern.CASE_INSENSITIVE).matcher(text).find();
-        boolean b5 = Pattern.compile("^\\[SUPPORT]", Pattern.CASE_INSENSITIVE).matcher(text).find();
+        ArrayList<Pattern> patterns = new ArrayList<>(List.of(
+            Pattern.compile("^» Support Question: \\(Click to answer\\)\\nAsked by (.{3,16}) (.{3,16})\\n(.*)"),
+            Pattern.compile("^ {39}\\n» (.{3,16}) has answered (.{3,16})'(?:s|) question:\\n\\n.*\\n {39}"),
+            Pattern.compile("^#\\d* (.{3,16}) ▶ (\\d*):(\\d*):(\\d*)"),
+            Pattern.compile("^ {2}▶ Reason: (.*)"),
+            Pattern.compile("^\\[SUPPORT]"),
+            Pattern.compile("^» Current Queue:"),
+            Pattern.compile("^» \\d*\\. .{3,16}\\(\\d* sessions\\)")
+        ));
 
-        if (b1 || b2 || b3 || b4 || b5) {
-            ci.cancel();
-            hud.addMessage(message);
+        for (Pattern p : patterns) {
+            if (p.matcher(text).find()) {
+                ci.cancel();
+                hud.addMessage(message);
+            }
         }
     }
 

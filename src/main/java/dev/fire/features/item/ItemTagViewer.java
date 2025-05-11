@@ -3,6 +3,7 @@ package dev.fire.features.item;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import dev.fire.features.Feature;
+import dev.fire.utils.ServerVerifier;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,11 +36,12 @@ public class ItemTagViewer extends Feature {
 
     @Override
     public void tooltip(ItemStack item, Item.TooltipContext context, TooltipType type, List<Text> textList) {
-        textList = getTagTooltip(item, context, textList);
+        if (!ServerVerifier.isPlayingDiamondfire()) return;
+        getTagTooltip(item, context, textList);
     }
 
-    public List<Text> getTagTooltip(ItemStack item, Item.TooltipContext context, List<Text> textList) {
-        if (context.getRegistryLookup() == null) return textList;
+    public void getTagTooltip(ItemStack item, Item.TooltipContext context, List<Text> textList) {
+        if (context.getRegistryLookup() == null) return;
         NbtCompound nbt = encodeStack(item, context.getRegistryLookup().getOps(NbtOps.INSTANCE));
         //Mod.log(nbt.toString());
 
@@ -86,6 +88,5 @@ public class ItemTagViewer extends Feature {
             textList.addAll(extTags);
         }
 
-        return textList;
     }
 }

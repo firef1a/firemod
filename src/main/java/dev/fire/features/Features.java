@@ -11,6 +11,7 @@ import dev.fire.features.commands.QueueOnJoin;
 import dev.fire.features.player.PaperDollFeature;
 import dev.fire.features.plot.CTPTracker;
 import dev.fire.features.plot.PTPTracker;
+import dev.fire.utils.ServerVerifier;
 import net.minecraft.text.Text;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class Features {
         //add(new CPUDisplay());
         add(new SessionQuestionHud());
         add(new QueueOnJoin());
-        add(new ItemLoreViewer());
+        //add(new ItemLoreViewer());
         //add(new ModVanishTracker());
         add(new CommandHider());
         //add(new PaperDollFeature());
