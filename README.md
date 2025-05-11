@@ -10,7 +10,6 @@ If you have any questions/suggestions dm me on discord @ fire_h
 - Saves support questions from the last hour (configurable)
 - Menu to /ptp to other people on the plot
 - Click on support session message in chat to enter sessions
-- Item Lore Viewer HUD
 - Hypercube Item Tag viewer in item lore
 - Menu that you can view and teleport to any code line on the plot.
   
