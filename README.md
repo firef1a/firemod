@@ -20,4 +20,4 @@ If you have any questions/suggestions dm me on discord @ fire_h
 
 ## Dependancies
 - YACL >= 3.6.1
-- Incompatible with any mod that modifies the ChatRenderer class.
+- May cause issues with mods that modify the ChatScreen class.
