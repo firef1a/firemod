@@ -51,7 +51,7 @@ public class PTPScreen extends Screen {
 
 
         for (String name : PTPTracker.playerData.keySet()) {
-            String val = PTPTracker.playerData.get(name);
+            String val = PTPTracker.playerData.getOrDefault(name, "null");
             Text text = Text.literal(name + " - " + val).withColor(colorText.getOrDefault(val, 0xFFFFFF));
             int w = Mod.MC.textRenderer.getWidth(name + " - " + val)+40;
 

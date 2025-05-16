@@ -67,7 +67,7 @@ public class Config {
             Option<Boolean> option = Option.createBuilder(boolean.class)
                     .name(Text.literal(feature.getFeatureName()))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.literal(feature.getFeatureName()))
+                            .text(Text.literal(feature.getDescription()))
                             .build())
                     .binding(
                             feature.isEnabled(),

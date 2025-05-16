@@ -3,9 +3,9 @@
   "package": "dev.fire.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "hud.MChatScreen",
     "hud.MToastManager",
-    "network.MClientConnection",
-    "hud.MChatScreen"
+    "network.MClientConnection"
   ],
   "injectors": {
     "defaultRequire": 1
