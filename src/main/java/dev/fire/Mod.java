@@ -9,6 +9,7 @@ import dev.fire.config.Config;
 import dev.fire.event.KeyInputHandler;
 import dev.fire.features.FeatureImpl;
 import dev.fire.features.Features;
+import dev.fire.features.chat.SessionQuestionHud;
 import dev.fire.helper.CommandQueueHelper;
 import dev.fire.utils.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
@@ -68,6 +69,8 @@ public class Mod implements ClientModInitializer {
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			dispatcher.register(ClientCommandManager.literal("queue").executes(Mod::sendQueueCommand));
+			dispatcher.register(ClientCommandManager.literal("clearqueue").executes(Mod::clearQueue));
+			dispatcher.register(ClientCommandManager.literal("clearquestions").executes(Mod::clearQuestions));
 			dispatcher.register(ClientCommandManager.literal("stats").then(ClientCommandManager.argument("player", StringArgumentType.string()).executes(Mod::sendStatsCommand)));
 		});
 
@@ -93,6 +96,18 @@ public class Mod implements ClientModInitializer {
 	private static int sendStatsCommand(CommandContext<FabricClientCommandSource> context) {
 		String player_name = StringArgumentType.getString(context, "player");
 		ChatUtils.sendMessage("/support stats " + player_name);
+		return 1;
+	}
+
+	private static int clearQuestions(CommandContext<FabricClientCommandSource> context) {
+		SessionQuestionHud.supportQuestions.clear();
+		ChatUtils.sendMessage("Cleared support question cache");
+		return 1;
+	}
+
+	private static int clearQueue(CommandContext<FabricClientCommandSource> context) {
+		SessionQuestionHud.sessionQueue.clear();
+		ChatUtils.sendMessage("Cleared support queue cache");
 		return 1;
 	}
 
