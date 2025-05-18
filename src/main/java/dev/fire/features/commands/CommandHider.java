@@ -46,6 +46,7 @@ public class CommandHider extends Feature {
                 if (Pattern.compile(match, Pattern.CASE_INSENSITIVE).matcher(text).find()) {
                     ci.cancel();
                     removeList.add(hider);
+
                     break;
                 }
             }
@@ -74,8 +75,6 @@ public class CommandHider extends Feature {
     public void handlePacket(Packet<?> packet, CallbackInfo ci) {
         if (packet instanceof PlaySoundFromEntityS2CPacket playSoundFromEntityS2CPacket) {
             String sound = playSoundFromEntityS2CPacket.getSound().getIdAsString();
-            Mod.log(sound);
-            Mod.log(entitySoundHiderList.toString());
             if (entitySoundHiderList.contains(sound)) {
                 entitySoundHiderList.remove(sound);
                 ci.cancel();;

@@ -84,9 +84,9 @@ public class ItemTagViewer extends Feature {
             if (element != null) { extTags.add(Text.literal(tag + ": ").withColor(flagCmdColor).append(Text.literal(element.toString()).withColor(flagCmdColorValue))); }
         }
         if (!hasTags && !extTags.isEmpty()) {
-            extTags.addFirst(Text.empty());
-            textList.addAll(extTags);
+            extTags.addFirst(Text.empty()); 
         }
+        textList.addAll(extTags);
 
     }
 }

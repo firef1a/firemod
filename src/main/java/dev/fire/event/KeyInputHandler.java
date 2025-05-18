@@ -30,14 +30,14 @@ public class KeyInputHandler {
 
             if (openPTPKeybinding.wasPressed()) {
                 if (!ServerVerifier.isPlayingDiamondfire())  {
-                    ChatUtils.displayMessage(Text.literal("You are not on mcdiamondfire.com."));
+                    Mod.displayMessage(Text.literal("You are not on mcdiamondfire.com."));
                 } else if (!PTPScreen.isOpen()) {
                     Mod.setCurrentScreen(new PTPScreen(Text.literal("PTP Screen"), cScreen));
                 }
             }
             if (openCTPKeybinding.wasPressed()) {
                 if (!ServerVerifier.isPlayingDiamondfire())  {
-                    ChatUtils.displayMessage(Text.literal("You are not on mcdiamondfire.com."));
+                    Mod.displayMessage(Text.literal("You are not on mcdiamondfire.com."));
                 } else if (!(CTPScreen.isOpen())) {
                     Mod.setCurrentScreen(new CTPScreen(Text.literal("CTP Screen"), cScreen));
                 }

@@ -9,6 +9,7 @@ public class CommandQueue {
     public ArrayList<String> singleHider;
     public ArrayList<String> multiHider;
     public ArrayList<String> entitySounds;
+    public Consumer<Object[]> consumer;
 
     public CommandQueue(String command, long delay, ArrayList<String> singleHider, ArrayList<String> multiHider, ArrayList<String> entitySounds) {
         this.command = command;
@@ -35,5 +36,9 @@ public class CommandQueue {
 
     public long getCommandCD() {
         return (50L * (command.length()) + 25L) + 100L;
+    }
+
+    public void setConsumer(Consumer<Object[]> consumer) {
+        this.consumer = consumer;
     }
 }

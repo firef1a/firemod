@@ -79,7 +79,7 @@ public class SessionQuestionHud extends Feature {
         for (String key : keys) {
             SupportQuestion question = supportQuestions.get(key);
             if (currentTime - question.timestamp > 60L * 60L * 1000L) {
-                ChatUtils.displayMessage(Text.literal(question.name + "'s question was removed because it timed out."));
+                Mod.displayMessage(Text.literal(question.name + "'s question timed out (>1 hour)"), true, true);
                 supportQuestions.remove(key);
             }
         }
@@ -309,7 +309,10 @@ public class SessionQuestionHud extends Feature {
 
         // queue missing kill event
         matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) joined the support queue\\. ▶ Reason: (.*)", Pattern.CASE_INSENSITIVE).matcher(text);
-        if (matcher.find()) { sessionQueue.add(new SessionEntry(matcher.group(1), matcher.group(2), System.currentTimeMillis())); }
+        if (matcher.find()) {
+            sessionQueue.add(new SessionEntry(matcher.group(1), matcher.group(2), System.currentTimeMillis()));
+            onJoinSupportQueue(matcher.group(1));
+        }
 
         matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) left the support queue\\.", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) { removeSupportQueue(matcher.group(1)); }
@@ -341,5 +344,9 @@ public class SessionQuestionHud extends Feature {
         matcher = Pattern.compile("^ {39}\\n» (.{3,16}) has answered (.{3,16})'(?:s|) question:\\n\\n.*\\n {39}", Pattern.CASE_INSENSITIVE).matcher(text);
         if (matcher.find()) { supportQuestions.remove(matcher.group(2)); }
         //                                       \n» CamTMH has answered N_Enders' question:\n\nNo.\n
+    }
+
+    public void onJoinSupportQueue(String name) {
+
     }
 }
